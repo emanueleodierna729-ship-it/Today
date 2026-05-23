@@ -20,4 +20,3 @@ jobs:
         with:
           fail-on-severity: high
           fail-on-scopes: runtime
-          comment-summary-in-pr: always
