@@ -5,8 +5,8 @@ Batch risk classifier for agentic skills using the Anthropic Batches API.
 Submits all skills to Claude at once for context-aware risk reclassification,
 at 50% off standard pricing.
 
-Requirements (not included in tools/requirements.txt to keep CI lean):
-    pip install -r tools/requirements-batch.txt
+Requirements (install separately before running):
+    pip install "anthropic>=0.40.0"
 
 Usage:
     python tools/scripts/batch_risk_classify.py              # dry run, all skills
