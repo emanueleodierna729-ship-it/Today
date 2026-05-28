@@ -1,138 +1,138 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Questo file fornisce indicazioni a Claude Code (claude.ai/code) quando lavora con il codice in questo repository.
 
-## What This Repository Is
+## Cos'è Questo Repository
 
-**Antigravity Awesome Skills** is a catalog of 1,453+ agentic `SKILL.md` playbooks installable into Claude Code, Gemini CLI, Cursor, Codex CLI, and other AI coding assistants. The repo ships an npm CLI installer, plugin bundles, a React web app for browsing skills, and a Python/Node toolchain for validating and generating derived registry artifacts.
+**Antigravity Awesome Skills** è un catalogo di oltre 1.453 playbook agentici `SKILL.md` installabili in Claude Code, Gemini CLI, Cursor, Codex CLI e altri assistenti di coding basati su AI. Il repo include un installer CLI npm, bundle di plugin, una web app React per sfogliare le skill e una toolchain Python/Node per validare e generare gli artefatti derivati del registro.
 
-## Commands
+## Comandi
 
-All Python scripts must be run via the Node wrapper (handles venv/path automatically):
+Tutti gli script Python devono essere eseguiti tramite il wrapper Node (gestisce automaticamente venv/path):
 
 ```bash
 node tools/scripts/run-python.js <python_script> [args]
 ```
 
-### Validation and Testing
+### Validazione e Test
 
 ```bash
-npm run validate                  # Validate all SKILL.md files
-npm run validate:strict           # Strict mode (treats warnings as errors)
-npm run security:docs             # Security scan on doc content (shell cmds, tokens, etc.)
-npm run test                      # Full local test suite
-npm run test:local                # Same as npm run test
-npm run validate:references       # Check cross-file doc/link references
-npm run check:warning-budget      # Enforce validation warning count ceiling
-npm run check:readme-credits      # Verify README credits for changed skills
-npm run audit:skills              # Audit skill quality
+npm run validate                  # Valida tutti i file SKILL.md
+npm run validate:strict           # Modalità strict (tratta i warning come errori)
+npm run security:docs             # Scansione di sicurezza sul contenuto della doc (comandi shell, token, ecc.)
+npm run test                      # Suite di test locale completa
+npm run test:local                # Come npm run test
+npm run validate:references       # Controlla i riferimenti incrociati tra doc/link
+npm run check:warning-budget      # Applica il limite massimo di warning di validazione
+npm run check:readme-credits      # Verifica i crediti README per le skill modificate
+npm run audit:skills              # Verifica la qualità delle skill
 ```
 
-Run a single JS test file directly:
+Eseguire un singolo file di test JS direttamente:
 ```bash
 node tools/scripts/tests/<test-file>.test.js
 ```
 
-Run a single Python test:
+Eseguire un singolo test Python:
 ```bash
 node tools/scripts/run-python.js tools/scripts/tests/<test-file>.py
 ```
 
-### Building / Syncing Derived Artifacts
+### Build / Sincronizzazione degli Artefatti Derivati
 
 ```bash
 npm run chain          # validate → plugin-compat sync → index → bundles → metadata
-npm run build          # chain + catalog (all derived artifacts except web assets)
-npm run catalog        # Build CATALOG.md and data/catalog.json only
-npm run index          # Regenerate skills_index.json and data/*.json
+npm run build          # chain + catalog (tutti gli artefatti derivati eccetto web assets)
+npm run catalog        # Genera solo CATALOG.md e data/catalog.json
+npm run index          # Rigenera skills_index.json e data/*.json
 ```
 
-These commands regenerate the **derived files** that must never be edited by hand (see below).
+Questi comandi rigenerano i **file derivati** che non devono mai essere modificati manualmente (vedi sotto).
 
 ### Web App
 
 ```bash
-npm run app:setup      # Copy skills data into the web app's public dir
-npm run app:dev        # Dev server (runs app:setup first)
+npm run app:setup      # Copia i dati delle skill nella cartella public della web app
+npm run app:dev        # Server di sviluppo (esegue app:setup prima)
 npm run app:install    # npm ci in apps/web-app/
 npm run app:test       # Vitest (non-watch)
-npm run app:test:coverage  # Vitest coverage
-npm run app:build      # Production build
+npm run app:test:coverage  # Copertura Vitest
+npm run app:build      # Build di produzione
 ```
 
-### Release (Maintainers Only)
+### Release (Solo Maintainer)
 
 ```bash
-npm run release:preflight   # Pre-release checks
-npm run sync:repo-state     # Full repo sync (all derived + web assets + contributors)
+npm run release:preflight   # Controlli pre-release
+npm run sync:repo-state     # Sincronizzazione completa del repo (derivati + web assets + contributors)
 ```
 
-## Architecture
+## Architettura
 
-### Skills Registry (`skills/`)
+### Registro delle Skill (`skills/`)
 
-Each skill is a folder containing one required file:
+Ogni skill è una cartella contenente un file obbligatorio:
 
 ```
 skills/
-└── skill-name/
-    └── SKILL.md          # Required: frontmatter + instructions
-    └── (optional extras: examples/, templates/, scripts/, README.md)
+└── nome-skill/
+    └── SKILL.md          # Obbligatorio: frontmatter + istruzioni
+    └── (opzionali: examples/, templates/, scripts/, README.md)
 ```
 
-**`SKILL.md` frontmatter** (validated by `tools/scripts/validate_skills.py`):
+**Frontmatter di `SKILL.md`** (validato da `tools/scripts/validate_skills.py`):
 
-| Field | Required | Notes |
+| Campo | Obbligatorio | Note |
 |---|---|---|
-| `name` | Yes | Must match folder name, lowercase-with-hyphens |
-| `description` | Yes | One sentence, under 200 chars |
-| `risk` | Yes | `none` \| `safe` \| `critical` \| `offensive` \| `unknown` |
-| `source` | Yes | `community`, `self`, or a URL |
-| `source_type` | Yes | `official` \| `community` \| `self` |
-| `source_repo` | When upstream | `OWNER/REPO` format |
-| `date_added` | Yes | `YYYY-MM-DD` |
+| `name` | Sì | Deve corrispondere al nome della cartella, lowercase-con-trattini |
+| `description` | Sì | Una frase, max 200 caratteri |
+| `risk` | Sì | `none` \| `safe` \| `critical` \| `offensive` \| `unknown` |
+| `source` | Sì | `community`, `self`, o un URL |
+| `source_type` | Sì | `official` \| `community` \| `self` |
+| `source_repo` | Se upstream | Formato `OWNER/REPO` |
+| `date_added` | Sì | `YYYY-MM-DD` |
 
-Every `SKILL.md` must include a `## When to Use` section (or an accepted variant) and a `## Limitations` section. Offensive skills (`risk: offensive`) must include an "Authorized Use Only" disclaimer.
+Ogni `SKILL.md` deve includere una sezione `## When to Use` (o una variante accettata) e una sezione `## Limitations`. Le skill offensive (`risk: offensive`) devono includere il disclaimer "Authorized Use Only".
 
-### Derived / Generated Files
+### File Derivati / Generati
 
-These files are **auto-generated** — never edit them directly:
+Questi file sono **generati automaticamente** — non modificarli mai direttamente:
 
 - `CATALOG.md`, `skills_index.json`
-- `data/` — all JSON files
-- `plugins/` and `.agents/plugins/` — plugin bundle distributions
+- `data/` — tutti i file JSON
+- `plugins/` e `.agents/plugins/` — distribuzioni dei bundle di plugin
 - `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`
 - `apps/web-app/public/sitemap.xml`, `apps/web-app/public/skills.json.backup`
 
-The canonical set is defined in `tools/config/generated-files.json`. On pushes to `main`, CI automatically regenerates and commits these files via `npm run sync:repo-state`.
+L'insieme canonico è definito in `tools/config/generated-files.json`. Ad ogni push su `main`, la CI rigenera e committa automaticamente questi file tramite `npm run sync:repo-state`.
 
-### PR Source-Only Contract
+### Contratto Source-Only per le PR
 
-**Pull requests must never include generated artifacts.** CI enforces this: if a PR diff touches any file in `derivedFiles`, it fails. Add or edit only source files (`skills/`, `docs/`, `tools/scripts/`, `apps/web-app/src/`, etc.). The main branch CI regenerates all derived outputs after merge.
+**Le pull request non devono mai includere artefatti generati.** La CI lo impone: se il diff di una PR tocca qualsiasi file in `derivedFiles`, fallisce. Aggiungere o modificare solo file sorgente (`skills/`, `docs/`, `tools/scripts/`, `apps/web-app/src/`, ecc.). La CI sul branch main rigenera tutti gli output derivati dopo il merge.
 
 ### Toolchain (`tools/`)
 
-- `tools/scripts/*.py` — Python scripts for validation, index generation, sync, auditing
-- `tools/scripts/*.js` / `*.cjs` — Node scripts for catalog build, installer, release
-- `tools/scripts/tests/` — Test suite (JS and Python); individual test files can be run directly
-- `tools/lib/` — Shared Node libraries (`workflow-contract.js`, `project-root.js`, etc.)
-- `tools/config/generated-files.json` — Defines the derived-file contract used by CI and `generated_files.js`
-- `tools/requirements.txt` — Python deps (only `pyyaml>=6.0`)
+- `tools/scripts/*.py` — Script Python per validazione, generazione index, sync, auditing
+- `tools/scripts/*.js` / `*.cjs` — Script Node per build del catalogo, installer, release
+- `tools/scripts/tests/` — Suite di test (JS e Python); i singoli file di test possono essere eseguiti direttamente
+- `tools/lib/` — Librerie Node condivise (`workflow-contract.js`, `project-root.js`, ecc.)
+- `tools/config/generated-files.json` — Definisce il contratto dei file derivati usato dalla CI e da `generated_files.js`
+- `tools/requirements.txt` — Dipendenze Python (solo `pyyaml>=6.0`)
 
 ### Web App (`apps/web-app/`)
 
-React 19 + Vite + TypeScript + Tailwind CSS + Supabase. Skills data is injected at build time via `npm run app:setup`, which copies `skills_index.json` into `apps/web-app/public/skills.json`. The app is otherwise a standard Vite SPA with Vitest for tests.
+React 19 + Vite + TypeScript + Tailwind CSS + Supabase. I dati delle skill vengono iniettati a build time tramite `npm run app:setup`, che copia `skills_index.json` in `apps/web-app/public/skills.json`. Per il resto è una SPA Vite standard con Vitest per i test.
 
-### Plugins (`plugins/`)
+### Plugin (`plugins/`)
 
-Each subdirectory is a plugin bundle (for Claude Code or Codex marketplace distribution). These are generated by `npm run plugin-compat:sync` from source skills and are never edited by hand.
+Ogni sottodirectory è un bundle di plugin (per la distribuzione nel marketplace di Claude Code o Codex). Vengono generati da `npm run plugin-compat:sync` a partire dalle skill sorgente e non vengono mai modificati manualmente.
 
-## Adding a Skill
+## Aggiungere una Skill
 
-1. `mkdir skills/your-skill-name`
-2. Copy template: `cp docs/contributors/skill-template.md skills/your-skill-name/SKILL.md`
-3. Fill in frontmatter and content
-4. `npm run validate` — must pass with no new errors
-5. `npm run security:docs` — required if skill includes shell commands, network calls, or token-like strings
-6. Open a PR; include the Quality Bar Checklist from `.github/PULL_REQUEST_TEMPLATE.md`
-7. Do **not** include `CATALOG.md`, `skills_index.json`, or `data/*.json` in the PR
+1. `mkdir skills/nome-skill`
+2. Copia il template: `cp docs/contributors/skill-template.md skills/nome-skill/SKILL.md`
+3. Compila frontmatter e contenuto
+4. `npm run validate` — deve passare senza nuovi errori
+5. `npm run security:docs` — obbligatorio se la skill include comandi shell, chiamate di rete o stringhe simili a token
+6. Apri una PR; includi il Quality Bar Checklist da `.github/PULL_REQUEST_TEMPLATE.md`
+7. **Non** includere `CATALOG.md`, `skills_index.json` o `data/*.json` nella PR
