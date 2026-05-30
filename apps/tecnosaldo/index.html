@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tecnosaldo</title>
+  <title>Tecnosaldo — Distributore Ufficiale Miller Electric · Toscana</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --yellow: #FFB800;
+      --yellow-dark: #e6a200;
+      --bg: #07090f;
+      --navy: #0b0e1a;
+      --navy2: #111627;
+      --white: #ffffff;
+      --gray: rgba(255,255,255,0.55);
+      --border: rgba(255,255,255,0.08);
+    }
+
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #0a0a0f;
-      color: #fff;
+      background: var(--bg);
+      color: var(--white);
       overflow-x: hidden;
     }
 
-    /* ── 3D Canvas sfondo ── */
     #bg-canvas {
       position: fixed;
       top: 0; left: 0;
@@ -23,423 +33,892 @@
       pointer-events: none;
     }
 
-    /* ── Tutti i contenuti sopra il canvas ── */
-    .page-wrapper {
-      position: relative;
-      z-index: 1;
-    }
+    .page-wrapper { position: relative; z-index: 1; }
 
-    /* ── HEADER / NAVBAR ── */
+    /* ── HEADER ── */
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 48px;
-      background: rgba(10,10,20,0.72);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 16px 48px;
+      background: rgba(7,9,15,0.82);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,184,0,0.15);
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-    }
-
-    /* Logo 3D con prospettiva CSS */
     .logo-3d {
+      animation: logoFloat 5s ease-in-out infinite;
       transform-style: preserve-3d;
-      perspective: 400px;
-      animation: logoFloat 4s ease-in-out infinite;
     }
     .logo-3d img {
-      height: 52px;
+      height: 44px;
       width: auto;
-      filter: drop-shadow(0 0 18px rgba(0,180,255,0.55));
+      filter: drop-shadow(0 0 14px rgba(255,184,0,0.6));
     }
-    /* Fallback testo se l'img non carica */
-    .logo-text-fallback {
-      font-size: 1.7rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      background: linear-gradient(135deg, #00b4ff, #a855f7, #ff6b35);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: none;
-      display: none; /* mostrato via JS se img fallisce */
-    }
-
     @keyframes logoFloat {
-      0%, 100% { transform: rotateY(0deg) rotateX(0deg); }
-      25%       { transform: rotateY(6deg) rotateX(2deg); }
-      75%       { transform: rotateY(-6deg) rotateX(-2deg); }
+      0%,100% { transform: rotateY(0deg) rotateX(0deg); }
+      30%      { transform: rotateY(5deg) rotateX(1.5deg); }
+      70%      { transform: rotateY(-5deg) rotateX(-1.5deg); }
     }
 
-    nav { display: flex; gap: 32px; }
+    nav { display: flex; gap: 28px; align-items: center; }
     nav a {
-      color: rgba(255,255,255,0.75);
+      color: rgba(255,255,255,0.7);
       text-decoration: none;
-      font-size: 0.92rem;
-      letter-spacing: 0.5px;
-      transition: color 0.25s;
+      font-size: 0.88rem;
+      letter-spacing: 0.4px;
+      transition: color 0.2s;
     }
-    nav a:hover { color: #00b4ff; }
+    nav a:hover { color: var(--yellow); }
+    .nav-cta {
+      background: var(--yellow);
+      color: #000 !important;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem !important;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--yellow-dark) !important; transform: translateY(-1px); }
 
     /* ── HERO ── */
     .hero {
-      min-height: 92vh;
+      min-height: 94vh;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       text-align: center;
-      padding: 60px 24px 40px;
-      gap: 24px;
+      padding: 60px 24px 48px;
+      gap: 22px;
     }
 
-    .hero-tag {
-      font-size: 0.78rem;
-      letter-spacing: 3px;
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      color: #00b4ff;
-      background: rgba(0,180,255,0.1);
-      border: 1px solid rgba(0,180,255,0.3);
-      padding: 6px 20px;
+      color: var(--yellow);
+      background: rgba(255,184,0,0.08);
+      border: 1px solid rgba(255,184,0,0.3);
+      padding: 6px 18px;
       border-radius: 20px;
     }
+    .hero-badge::before { content: '⚡'; }
 
     .hero h1 {
-      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-size: clamp(2.6rem, 6.5vw, 5.4rem);
       font-weight: 900;
-      line-height: 1.1;
-      text-shadow: 0 0 60px rgba(0,180,255,0.35);
-      transform-style: preserve-3d;
-      animation: titleDepth 6s ease-in-out infinite;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      animation: titleDepth 7s ease-in-out infinite;
     }
+    .hero h1 .accent { color: var(--yellow); }
     @keyframes titleDepth {
-      0%, 100% { text-shadow: 4px 4px 0 rgba(0,180,255,0.25), 0 0 60px rgba(0,180,255,0.35); }
-      50%       { text-shadow: -4px -4px 0 rgba(168,85,247,0.25), 0 0 80px rgba(168,85,247,0.4); }
+      0%,100% { text-shadow: 5px 5px 0 rgba(255,184,0,0.18), 0 0 50px rgba(255,184,0,0.2); }
+      50%      { text-shadow: -5px -5px 0 rgba(255,184,0,0.12), 0 0 80px rgba(255,184,0,0.3); }
     }
 
-    .hero h1 span { color: #00b4ff; }
-
-    .hero p {
-      font-size: 1.18rem;
-      color: rgba(255,255,255,0.65);
-      max-width: 560px;
-      line-height: 1.7;
-    }
-
-    /* ── Pulsanti download ── */
-    .download-group {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
-    .btn-download {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 28px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      transition: transform 0.25s, box-shadow 0.25s;
-      transform-style: preserve-3d;
-      position: relative;
-    }
-    .btn-download::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      transform: translateZ(-8px);
-    }
-    .btn-download:hover {
-      transform: translateY(-4px) translateZ(8px) scale(1.03);
-      box-shadow: 0 16px 40px rgba(0,180,255,0.35);
-    }
-
-    .btn-appstore {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      border: 1.5px solid rgba(255,255,255,0.15);
-      color: #fff;
-    }
-    .btn-playstore {
-      background: linear-gradient(135deg, #0f3460, #533483);
-      border: 1.5px solid rgba(255,255,255,0.15);
-      color: #fff;
-    }
-    .btn-apk {
-      background: linear-gradient(135deg, #1a3a1a, #2d5a1b);
-      border: 1.5px solid rgba(0,255,100,0.25);
-      color: #7fff7f;
-    }
-
-    .btn-icon { font-size: 1.8rem; line-height: 1; }
-    .btn-label { display: flex; flex-direction: column; text-align: left; }
-    .btn-label small { font-size: 0.68rem; font-weight: 400; opacity: 0.7; }
-    .btn-label strong { font-size: 1rem; }
-
-    /* ── Sezione DOWNLOAD (dettaglio) ── */
-    #download {
-      padding: 80px 24px;
-      text-align: center;
-    }
-
-    .section-title {
-      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-      font-weight: 800;
-      margin-bottom: 12px;
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
       letter-spacing: 1px;
     }
-    .section-title span { color: #a855f7; }
+    .hero-sub em { color: var(--yellow); font-style: normal; }
 
-    .section-sub {
-      color: rgba(255,255,255,0.55);
-      max-width: 520px;
-      margin: 0 auto 48px;
-      line-height: 1.7;
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--gray);
+      max-width: 560px;
+      line-height: 1.75;
     }
 
-    .download-cards {
+    /* ── Download buttons ── */
+    .download-group {
       display: flex;
-      gap: 24px;
-      justify-content: center;
+      gap: 14px;
       flex-wrap: wrap;
-      max-width: 900px;
-      margin: 0 auto;
+      justify-content: center;
+      margin-top: 6px;
     }
 
+    .btn-dl {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 13px 26px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transform-style: preserve-3d;
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative;
+    }
+    .btn-dl:hover {
+      transform: translateY(-5px) translateZ(6px) scale(1.03);
+    }
+    .btn-primary {
+      background: var(--yellow);
+      color: #000;
+      box-shadow: 0 6px 28px rgba(255,184,0,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 14px 40px rgba(255,184,0,0.5); }
+    .btn-dark {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.14);
+    }
+    .btn-dark:hover { border-color: var(--yellow); color: var(--yellow); box-shadow: 0 10px 30px rgba(255,184,0,0.15); }
+
+    .btn-icon { font-size: 1.6rem; line-height: 1; }
+    .btn-label { display: flex; flex-direction: column; text-align: left; }
+    .btn-label small { font-size: 0.65rem; font-weight: 400; opacity: 0.75; }
+    .btn-label strong { font-size: 0.95rem; }
+
+    /* ── Divisore branded ── */
+    .stripe {
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
+      opacity: 0.5;
+    }
+
+    /* ── SEZIONI comuni ── */
+    section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+
+    .sec-label {
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 10px;
+    }
+    .sec-title {
+      font-size: clamp(1.7rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+    .sec-title .acc { color: var(--yellow); }
+    .sec-desc {
+      color: var(--gray);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+    }
+
+    /* ── CHI SIAMO ── */
+    .chi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .chi-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      transform-style: preserve-3d;
+    }
+    .chi-card:hover {
+      transform: translateY(-8px) rotateX(3deg);
+      box-shadow: 0 20px 50px rgba(255,184,0,0.12);
+      border-color: rgba(255,184,0,0.25);
+    }
+    .chi-card .ci-icon { font-size: 2rem; margin-bottom: 12px; }
+    .chi-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: var(--yellow); }
+    .chi-card p { font-size: 0.82rem; color: var(--gray); line-height: 1.55; }
+
+    /* ── PRODOTTI ── */
+    #prodotti { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+
+    .prod-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .tab-btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--gray);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--yellow);
+      color: #000;
+      border-color: var(--yellow);
+    }
+
+    .prod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .prod-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      transform-style: preserve-3d;
+    }
+    .prod-card:hover {
+      transform: translateY(-8px) rotateX(3deg);
+      box-shadow: 0 20px 50px rgba(255,184,0,0.1);
+      border-color: rgba(255,184,0,0.3);
+    }
+    .prod-code {
+      font-size: 0.68rem;
+      letter-spacing: 1.5px;
+      color: var(--yellow);
+      font-family: monospace;
+      margin-bottom: 8px;
+    }
+    .prod-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+    .prod-card p { font-size: 0.78rem; color: var(--gray); line-height: 1.5; }
+    .prod-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .tag {
+      font-size: 0.62rem;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(255,184,0,0.1);
+      color: var(--yellow);
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* ── DOWNLOAD APP ── */
+    #download {
+      background: linear-gradient(135deg, rgba(255,184,0,0.05), rgba(0,0,0,0));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 24px;
+    }
+    #download .inner { max-width: 1100px; margin: 0 auto; }
+
+    .dl-cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
     .dl-card {
       background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 36px 32px;
-      width: 240px;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
+      padding: 36px 28px;
+      width: 220px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
       transform-style: preserve-3d;
     }
     .dl-card:hover {
       transform: translateY(-10px) rotateX(4deg);
-      box-shadow: 0 24px 60px rgba(0,180,255,0.2);
+      box-shadow: 0 24px 60px rgba(255,184,0,0.15);
+      border-color: rgba(255,184,0,0.3);
     }
-    .dl-card .card-icon { font-size: 3.2rem; margin-bottom: 16px; }
-    .dl-card h3 { font-size: 1.05rem; margin-bottom: 8px; }
-    .dl-card p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+    .dl-card .dc-icon { font-size: 3rem; margin-bottom: 16px; }
+    .dl-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+    .dl-card p { font-size: 0.78rem; color: var(--gray); line-height: 1.5; }
     .dl-card a {
       display: inline-block;
       margin-top: 20px;
-      padding: 10px 22px;
+      padding: 9px 20px;
       border-radius: 10px;
-      background: linear-gradient(135deg, #00b4ff, #a855f7);
-      color: #fff;
+      background: var(--yellow);
+      color: #000;
       text-decoration: none;
       font-weight: 700;
-      font-size: 0.88rem;
-      transition: opacity 0.2s;
+      font-size: 0.82rem;
+      transition: opacity 0.2s, transform 0.2s;
     }
-    .dl-card a:hover { opacity: 0.85; }
+    .dl-card a:hover { opacity: 0.85; transform: translateY(-2px); }
 
-    /* ── Feature strip ── */
-    .features {
+    /* ── SERVIZI ── */
+    #servizi { background: var(--navy); border-top: 1px solid var(--border); }
+    #servizi .inner { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+
+    .serv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .serv-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: transform 0.3s, border-color 0.3s;
+      transform-style: preserve-3d;
+    }
+    .serv-card:hover {
+      transform: translateY(-7px) rotateX(3deg);
+      border-color: rgba(255,184,0,0.3);
+    }
+    .serv-card .s-icon { font-size: 2rem; margin-bottom: 14px; }
+    .serv-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; color: var(--yellow); }
+    .serv-card p { font-size: 0.8rem; color: var(--gray); line-height: 1.55; }
+
+    /* ── CONTATTI ── */
+    #contatti { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+
+    .contatti-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .contatti-wrap { grid-template-columns: 1fr; } }
+
+    .cont-info { display: flex; flex-direction: column; gap: 20px; }
+    .cont-row {
       display: flex;
-      gap: 0;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
     }
-    .feature-item {
-      flex: 1;
-      min-width: 200px;
-      padding: 40px 32px;
-      text-align: center;
-      border-right: 1px solid rgba(255,255,255,0.07);
-      transition: background 0.3s;
+    .cont-row .cr-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .cont-row h4 { font-size: 0.75rem; color: var(--yellow); margin-bottom: 3px; letter-spacing: 1px; text-transform: uppercase; }
+    .cont-row p, .cont-row a { font-size: 0.88rem; color: rgba(255,255,255,0.8); text-decoration: none; line-height: 1.5; }
+    .cont-row a:hover { color: var(--yellow); }
+
+    .contact-form-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
     }
-    .feature-item:last-child { border-right: none; }
-    .feature-item:hover { background: rgba(255,255,255,0.03); }
-    .feature-item .f-icon { font-size: 2.2rem; margin-bottom: 12px; }
-    .feature-item h4 { font-size: 0.95rem; margin-bottom: 6px; }
-    .feature-item p { font-size: 0.8rem; color: rgba(255,255,255,0.45); line-height: 1.5; }
+    .contact-form-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 22px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 0.75rem; color: var(--yellow); letter-spacing: 1px; text-transform: uppercase; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--yellow); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .form-group select option { background: #111; }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: var(--yellow);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-submit:hover { background: var(--yellow-dark); transform: translateY(-2px); }
 
     /* ── FOOTER ── */
     footer {
+      background: rgba(0,0,0,0.5);
+      border-top: 1px solid rgba(255,184,0,0.15);
       padding: 32px 48px;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.35);
-      font-size: 0.82rem;
-      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
     }
+    footer p { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+    footer .f-logo img { height: 32px; filter: brightness(0.7); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.78rem; color: rgba(255,255,255,0.35); text-decoration: none; }
+    .footer-links a:hover { color: var(--yellow); }
 
     /* ── Responsive ── */
     @media (max-width: 640px) {
       header { padding: 14px 20px; }
-      nav { display: none; }
-      .hero h1 { font-size: 2.2rem; }
+      nav a:not(.nav-cta) { display: none; }
+      footer { flex-direction: column; text-align: center; padding: 24px 20px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Canvas Three.js - sfondo 3D animato -->
 <canvas id="bg-canvas"></canvas>
 
 <div class="page-wrapper">
 
   <!-- HEADER -->
   <header>
-    <a class="logo-wrap" href="#">
+    <a href="#" style="text-decoration:none;">
       <div class="logo-3d">
-        <img
-          id="logo-img"
-          src="logo.png"
-          alt="Tecnosaldo"
-          onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';"
-        />
-        <span id="logo-fallback" class="logo-text-fallback">TECNOSALDO</span>
+        <img src="logo.jpg" alt="Tecnosaldo" />
       </div>
     </a>
     <nav>
-      <a href="#home">Home</a>
-      <a href="#download">Download</a>
-      <a href="#features">Funzionalità</a>
-      <a href="#contatti">Contatti</a>
+      <a href="#chi-siamo">Chi Siamo</a>
+      <a href="#prodotti">Prodotti</a>
+      <a href="#servizi">Servizi</a>
+      <a href="#download">App</a>
+      <a href="#contatti" class="nav-cta">Contattaci</a>
     </nav>
   </header>
 
   <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-tag">Tecnologia al tuo servizio</div>
-    <h1>Benvenuto in<br /><span>Tecnosaldo</span></h1>
-    <p>
-      La soluzione digitale professionale per gestire i tuoi servizi in modo semplice,
-      veloce e sicuro. Disponibile su tutti i dispositivi.
+  <section class="hero" id="home" style="max-width:none;">
+    <div class="hero-badge">Distributore Ufficiale Miller Electric · Toscana</div>
+    <h1>Unione<br /><span class="accent">perfetta.</span></h1>
+    <p class="hero-sub">
+      <em>TECNOLOGIA</em> PER SALDARE. <em>PERSONE</em> PER SUPPORTARTI.
     </p>
-
-    <!-- Pulsanti download principali -->
+    <p class="hero-desc">
+      Vendita, assistenza e consulenza professionale con i migliori brand del settore.
+      Impianti Miller Electric, ESAB, consumabili, DPI e accessori TIG.
+    </p>
     <div class="download-group">
-      <a class="btn-download btn-appstore" href="#download" aria-label="Scarica su App Store">
-        <span class="btn-icon"></span>
+      <a class="btn-dl btn-primary" href="#download">
+        <span class="btn-icon">📱</span>
         <span class="btn-label">
-          <small>Scarica su</small>
-          <strong>App Store</strong>
+          <small>Scarica subito</small>
+          <strong>App Tecnosaldo</strong>
         </span>
       </a>
-      <a class="btn-download btn-playstore" href="#download" aria-label="Scarica su Google Play">
-        <span class="btn-icon">▶</span>
+      <a class="btn-dl btn-dark" href="#prodotti">
+        <span class="btn-icon">📦</span>
         <span class="btn-label">
-          <small>Disponibile su</small>
-          <strong>Google Play</strong>
+          <small>Esplora il</small>
+          <strong>Catalogo 2025</strong>
         </span>
       </a>
-      <a class="btn-download btn-apk" href="#download" aria-label="Scarica APK diretto">
-        <span class="btn-icon">⬇</span>
+      <a class="btn-dl btn-dark" href="tel:+393934775160">
+        <span class="btn-icon">📞</span>
         <span class="btn-label">
-          <small>Download diretto</small>
-          <strong>APK Android</strong>
+          <small>Chiama ora</small>
+          <strong>+39 393 4775160</strong>
         </span>
       </a>
     </div>
   </section>
 
-  <!-- FEATURE STRIP -->
-  <div class="features" id="features">
-    <div class="feature-item">
-      <div class="f-icon">⚡</div>
-      <h4>Veloce</h4>
-      <p>Interfaccia ottimizzata per massima reattività</p>
+  <div class="stripe"></div>
+
+  <!-- CHI SIAMO -->
+  <section id="chi-siamo">
+    <p class="sec-label">Chi Siamo</p>
+    <h2 class="sec-title">La nostra <span class="acc">missione</span></h2>
+    <p class="sec-desc">
+      Tecnosaldo nasce in Toscana dalla passione autentica per la saldatura professionale.
+      Non forniamo solo prodotti: diventiamo il tuo partner tecnico, con risposta rapida
+      e soluzioni su misura per artigiani, officine e carpenterie.
+    </p>
+    <div class="chi-grid">
+      <div class="chi-card">
+        <div class="ci-icon">📍</div>
+        <h3>Presenza Costante</h3>
+        <p>Prima, durante e dopo ogni fornitura. Un referente dedicato per ogni cliente.</p>
+      </div>
+      <div class="chi-card">
+        <div class="ci-icon">🔧</div>
+        <h3>Supporto Tecnico</h3>
+        <p>Competenze reali sul campo. Intervento in sede, da remoto e telefonico.</p>
+      </div>
+      <div class="chi-card">
+        <div class="ci-icon">✅</div>
+        <h3>Serietà</h3>
+        <p>Rispettiamo ogni impegno preso con il cliente, senza eccezioni.</p>
+      </div>
+      <div class="chi-card">
+        <div class="ci-icon">⚡</div>
+        <h3>Innovazione</h3>
+        <p>Tecnologie d'avanguardia Miller e ESAB, Industria 4.0 e IoT per la saldatura.</p>
+      </div>
+      <div class="chi-card">
+        <div class="ci-icon">🌱</div>
+        <h3>Sostenibilità</h3>
+        <p>Impianti ad alta efficienza energetica, ridotto impatto ambientale.</p>
+      </div>
+      <div class="chi-card">
+        <div class="ci-icon">❤️</div>
+        <h3>Passione</h3>
+        <p>La saldatura è la nostra ragione d'essere. Persone di esperienza storica nel settore.</p>
+      </div>
     </div>
-    <div class="feature-item">
-      <div class="f-icon">🔒</div>
-      <h4>Sicuro</h4>
-      <p>Crittografia end-to-end per i tuoi dati</p>
-    </div>
-    <div class="feature-item">
-      <div class="f-icon">📱</div>
-      <h4>Multipiattaforma</h4>
-      <p>iOS, Android e Web — sempre sincronizzato</p>
-    </div>
-    <div class="feature-item">
-      <div class="f-icon">🛠</div>
-      <h4>Supporto</h4>
-      <p>Assistenza tecnica professionale 7/7</p>
+  </section>
+
+  <div class="stripe"></div>
+
+  <!-- PRODOTTI -->
+  <div id="prodotti">
+    <section style="padding-bottom:0;">
+      <p class="sec-label">Catalogo 2025</p>
+      <h2 class="sec-title">I nostri <span class="acc">prodotti</span></h2>
+      <p class="sec-desc">
+        Distributore ufficiale Miller Electric per la Toscana. Gamma completa di impianti,
+        consumabili, DPI e accessori per la saldatura professionale.
+      </p>
+    </section>
+
+    <div style="max-width:1100px;margin:0 auto;padding:0 24px 80px;">
+      <div class="prod-tabs">
+        <button class="tab-btn active" onclick="filterProd('miller')">Miller Electric</button>
+        <button class="tab-btn" onclick="filterProd('esab')">ESAB</button>
+        <button class="tab-btn" onclick="filterProd('consumabili')">Consumabili</button>
+        <button class="tab-btn" onclick="filterProd('dischi')">Dischi Abrasivi</button>
+        <button class="tab-btn" onclick="filterProd('dpi')">DPI</button>
+        <button class="tab-btn" onclick="filterProd('tig')">Accessori TIG</button>
+      </div>
+
+      <div class="prod-grid" id="prod-grid">
+
+        <!-- MILLER -->
+        <div class="prod-card" data-cat="miller">
+          <div class="prod-code">MILL907853001</div>
+          <h3>DELTAWELD 350 — 400V CE</h3>
+          <p>Generatore MIG 350A trifase 400V, duty cycle 100% a 300A. Compatibile trainafilo BlueFab.</p>
+          <div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">350A</span><span class="tag">TRIFASE</span></div>
+        </div>
+        <div class="prod-card" data-cat="miller">
+          <div class="prod-code">MILL907854001</div>
+          <h3>DELTAWELD 500 — Heavy Duty CE</h3>
+          <p>500A per produzione intensiva. Alimentazione 400V trifase, duty cycle 60% a 500A.</p>
+          <div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">500A</span><span class="tag">HEAVY DUTY</span></div>
+        </div>
+        <div class="prod-card" data-cat="miller">
+          <div class="prod-code">MILL907853003</div>
+          <h3>DELTAWELD 350 — Insight Core</h3>
+          <p>350A con monitoraggio Insight Core in tempo reale. Tracciabilità parametri, Industria 4.0.</p>
+          <div class="prod-tags"><span class="tag">MIG</span><span class="tag">350A</span><span class="tag">IoT</span></div>
+        </div>
+        <div class="prod-card" data-cat="miller">
+          <div class="prod-code">MILL907816003</div>
+          <h3>DYNASTY 210 AC/DC Auto-Line</h3>
+          <p>TIG AC/DC 210A. Auto-Line 120-480V, Squarewave 20-250Hz. Per inox, alluminio, titanio.</p>
+          <div class="prod-tags"><span class="tag">TIG AC/DC</span><span class="tag">210A</span><span class="tag">AUTO-LINE</span></div>
+        </div>
+        <div class="prod-card" data-cat="miller">
+          <div class="prod-code">MILL907819002</div>
+          <h3>DYNASTY 300 — Multiprocess</h3>
+          <p>TIG AC/DC + MMA DC 300A. Auto-Line 120-480V. Alluminio, inox, titanio.</p>
+          <div class="prod-tags"><span class="tag">TIG/MMA</span><span class="tag">300A</span><span class="tag">MULTIPROCESS</span></div>
+        </div>
+        <div class="prod-card" data-cat="miller">
+          <div class="prod-code">MILL907684001</div>
+          <h3>MAXSTAR 210 DX — Portabile</h3>
+          <p>Inverter MMA/TIG DC 210A. Auto-Line 120-480V. Leggerissimo, ideale per cantieri.</p>
+          <div class="prod-tags"><span class="tag">MMA/TIG</span><span class="tag">210A</span><span class="tag">CANTIERE</span></div>
+        </div>
+
+        <!-- ESAB -->
+        <div class="prod-card" data-cat="esab" style="display:none;">
+          <div class="prod-code">ESAB — REBEL</div>
+          <h3>ESAB Rebel Series</h3>
+          <p>Impianti multiprocesso ESAB per Toscana. Versatili, robusti, per ogni applicazione professionale.</p>
+          <div class="prod-tags"><span class="tag">MIG/MMA/TIG</span><span class="tag">MULTIPROCESSO</span></div>
+        </div>
+        <div class="prod-card" data-cat="esab" style="display:none;">
+          <div class="prod-code">ESAB — ROGUE</div>
+          <h3>ESAB Rogue Series</h3>
+          <p>Gamma Rogue per saldatura MMA e TIG. Portabilità e robustezza per uso in cantiere.</p>
+          <div class="prod-tags"><span class="tag">MMA</span><span class="tag">TIG</span><span class="tag">PORTABILE</span></div>
+        </div>
+        <div class="prod-card" data-cat="esab" style="display:none;">
+          <div class="prod-code">ESAB — K4000</div>
+          <h3>ESAB K4000</h3>
+          <p>Impianto professionale ESAB per applicazioni industriali in carpenteria metallica.</p>
+          <div class="prod-tags"><span class="tag">INDUSTRIALE</span><span class="tag">CARPENTERIA</span></div>
+        </div>
+
+        <!-- CONSUMABILI -->
+        <div class="prod-card" data-cat="consumabili" style="display:none;">
+          <div class="prod-code">CONSUMABILI — MMA</div>
+          <h3>Elettrodi MMA — Acciaio Carbonio</h3>
+          <p>Elettrodi MMA per acciaio al carbonio. Alta qualità, innesco facile, ridotti spruzzi.</p>
+          <div class="prod-tags"><span class="tag">MMA</span><span class="tag">ACCIAIO</span></div>
+        </div>
+        <div class="prod-card" data-cat="consumabili" style="display:none;">
+          <div class="prod-code">CONSUMABILI — MIG</div>
+          <h3>Fili MIG/MAG SG2</h3>
+          <p>Filo MIG/MAG SG2 per acciaio al carbonio. Cordoni regolari, alta produttività.</p>
+          <div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">SG2</span></div>
+        </div>
+        <div class="prod-card" data-cat="consumabili" style="display:none;">
+          <div class="prod-code">CONSUMABILI — INOX</div>
+          <h3>Consumabili Inox 308L / 316L</h3>
+          <p>Elettrodi, fili e bacchette TIG per AISI 304/308 e AISI 316. Qualità certificata.</p>
+          <div class="prod-tags"><span class="tag">INOX</span><span class="tag">308L</span><span class="tag">316L</span></div>
+        </div>
+
+        <!-- DISCHI -->
+        <div class="prod-card" data-cat="dischi" style="display:none;">
+          <div class="prod-code">DISCO — TAGLIO</div>
+          <h3>Dischi Taglio Ferro/Inox</h3>
+          <p>Dischi abrasivi da taglio per ferro e inox. Elevata velocità di taglio, lunga durata.</p>
+          <div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">FERRO</span><span class="tag">INOX</span></div>
+        </div>
+        <div class="prod-card" data-cat="dischi" style="display:none;">
+          <div class="prod-code">DISCO — SBAVATURA</div>
+          <h3>Dischi Sbavatura & Lamellari</h3>
+          <p>Dischi per sbavatura e molatura. Lamellari per finitura superficiale in carpenteria.</p>
+          <div class="prod-tags"><span class="tag">SBAVATURA</span><span class="tag">LAMELLARI</span><span class="tag">CARPENTERIA</span></div>
+        </div>
+
+        <!-- DPI -->
+        <div class="prod-card" data-cat="dpi" style="display:none;">
+          <div class="prod-code">DPI — GUANTI</div>
+          <h3>Guanti Protezione Saldatura</h3>
+          <p>Guanti DPI per saldatura MIG/MMA. Protezione termica, grip ottimale, comfort elevato.</p>
+          <div class="prod-tags"><span class="tag">DPI</span><span class="tag">GUANTI</span></div>
+        </div>
+        <div class="prod-card" data-cat="dpi" style="display:none;">
+          <div class="prod-code">DPI — ABBIGLIAMENTO</div>
+          <h3>Abbigliamento Ignifugo</h3>
+          <p>Tute e giacche ignifughe certificate per la protezione del saldatore professionista.</p>
+          <div class="prod-tags"><span class="tag">IGNIFUGO</span><span class="tag">CERTIFICATO</span></div>
+        </div>
+        <div class="prod-card" data-cat="dpi" style="display:none;">
+          <div class="prod-code">NEWCOVA.CS.01</div>
+          <h3>Ricambi Maschere & Caschi</h3>
+          <p>Vetri, gruppi ottici, testiere e cuffie per maschere auto-oscuranti di tutte le marche.</p>
+          <div class="prod-tags"><span class="tag">MASCHERE</span><span class="tag">RICAMBI</span></div>
+        </div>
+
+        <!-- TIG -->
+        <div class="prod-card" data-cat="tig" style="display:none;">
+          <div class="prod-code">NEWCOEL.CE.16</div>
+          <h3>Elettrodo Ceriato WC20 Ø 1.6mm</h3>
+          <p>Tungsteno ceriato 2% (WC20). Universale AC/DC, facile innesco HF, lunga durata. Colore: grigio.</p>
+          <div class="prod-tags"><span class="tag">TIG</span><span class="tag">CERIATO</span><span class="tag">AC/DC</span></div>
+        </div>
+        <div class="prod-card" data-cat="tig" style="display:none;">
+          <div class="prod-code">NEWCOEL.L2.16</div>
+          <h3>Elettrodo Lantaniato WL2 Ø 1.6mm</h3>
+          <p>Lantaniato 2% (WL2). Eccellente per DC+, stabilità d'arco superiore. Colore: blu.</p>
+          <div class="prod-tags"><span class="tag">TIG</span><span class="tag">LANTANIATO</span><span class="tag">DC</span></div>
+        </div>
+        <div class="prod-card" data-cat="tig" style="display:none;">
+          <div class="prod-code">NEWCOWP-17</div>
+          <h3>Corpo Torcia TIG WP-17 (150A)</h3>
+          <p>150A raffreddamento aria. Standard internazionale, compatibile con tutti i ricambi WP-17.</p>
+          <div class="prod-tags"><span class="tag">TORCIA</span><span class="tag">WP-17</span><span class="tag">150A</span></div>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <!-- SEZIONE DOWNLOAD -->
-  <section id="download" style="padding: 80px 24px; text-align: center;">
-    <h2 class="section-title">Scarica l'<span>App</span></h2>
-    <p class="section-sub">
-      Scegli la piattaforma che preferisci e inizia subito a utilizzare Tecnosaldo
-      sul tuo dispositivo.
-    </p>
+  <div class="stripe"></div>
 
-    <div class="download-cards">
+  <!-- DOWNLOAD APP -->
+  <div id="download">
+    <div class="inner">
+      <p class="sec-label">App Mobile</p>
+      <h2 class="sec-title">Scarica l'<span class="acc">App</span></h2>
+      <p class="sec-desc">
+        Accedi al catalogo, richiedi preventivi e contatta il supporto direttamente
+        dal tuo smartphone. Disponibile su tutte le piattaforme.
+      </p>
+      <div class="dl-cards">
+        <div class="dl-card">
+          <div class="dc-icon"></div>
+          <h3>iPhone / iPad</h3>
+          <p>iOS 14+. Ottimizzata per tutti i dispositivi Apple.</p>
+          <a href="#" id="link-ios">App Store</a>
+        </div>
+        <div class="dl-card">
+          <div class="dc-icon">🤖</div>
+          <h3>Android</h3>
+          <p>Android 8.0+. Disponibile su Google Play Store.</p>
+          <a href="#" id="link-android">Play Store</a>
+        </div>
+        <div class="dl-card">
+          <div class="dc-icon">📦</div>
+          <h3>APK Diretto</h3>
+          <p>Installa il file APK manualmente su Android.</p>
+          <a href="#" id="link-apk" download>Scarica APK</a>
+        </div>
+        <div class="dl-card">
+          <div class="dc-icon">🌐</div>
+          <h3>Web App</h3>
+          <p>Accedi dal browser, senza installazioni.</p>
+          <a href="https://www.tecnosaldo.it" target="_blank">Apri nel browser</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <!-- iOS -->
-      <div class="dl-card">
-        <div class="card-icon"></div>
-        <h3>iPhone / iPad</h3>
-        <p>iOS 14 o superiore. Ottimizzata per tutti i dispositivi Apple.</p>
-        <a href="#" id="link-ios">Vai su App Store</a>
+  <!-- SERVIZI -->
+  <div id="servizi">
+    <div class="inner">
+      <p class="sec-label">Servizi & Supporto</p>
+      <h2 class="sec-title">Siamo con te <span class="acc">sempre</span></h2>
+      <p class="sec-desc">
+        Prima, durante e dopo ogni fornitura. Il team Tecnosaldo è pronto
+        per consulenze, interventi, formazione e noleggio.
+      </p>
+      <div class="serv-grid">
+        <div class="serv-card">
+          <div class="s-icon">🔍</div>
+          <h3>Consulenza Pre-Vendita</h3>
+          <p>Analisi del processo e selezione del prodotto corretto per ogni applicazione.</p>
+        </div>
+        <div class="serv-card">
+          <div class="s-icon">🎯</div>
+          <h3>Demo in Loco</h3>
+          <p>Dimostrazioni Miller e ESAB direttamente nel tuo stabilimento o cantiere.</p>
+        </div>
+        <div class="serv-card">
+          <div class="s-icon">🛠</div>
+          <h3>Assistenza Tecnica</h3>
+          <p>Supporto telefonico, da remoto e intervento tecnico in sede per tutti i brand.</p>
+        </div>
+        <div class="serv-card">
+          <div class="s-icon">🔩</div>
+          <h3>Ricambi Originali</h3>
+          <p>Disponibilità rapida di ricambi originali Miller Electric e accessori per tutti i brand.</p>
+        </div>
+        <div class="serv-card">
+          <div class="s-icon">🎓</div>
+          <h3>Formazione</h3>
+          <p>Corsi base e avanzati con rilascio di attestato di partecipazione certificato.</p>
+        </div>
+        <div class="serv-card">
+          <div class="s-icon">🚛</div>
+          <h3>Noleggio Impianti</h3>
+          <p>Soluzioni noleggio breve e lungo periodo per gestire i picchi produttivi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stripe"></div>
+
+  <!-- CONTATTI -->
+  <section id="contatti">
+    <p class="sec-label">Contatti</p>
+    <h2 class="sec-title">Parlaci del tuo <span class="acc">progetto</span></h2>
+    <p class="sec-desc">Siamo disponibili Lun–Ven 08:00–18:00, Sabato su appuntamento.</p>
+
+    <div class="contatti-wrap">
+      <div class="cont-info">
+        <div class="cont-row">
+          <span class="cr-icon">📍</span>
+          <div>
+            <h4>Sede Operativa</h4>
+            <p>Via Aurelia 430/432<br />San Lazzaro Vecchio, Sarzana (SP)</p>
+          </div>
+        </div>
+        <div class="cont-row">
+          <span class="cr-icon">📞</span>
+          <div>
+            <h4>Telefono</h4>
+            <a href="tel:+393934775160">+39 393 4775160</a>
+          </div>
+        </div>
+        <div class="cont-row">
+          <span class="cr-icon">✉️</span>
+          <div>
+            <h4>Email Commerciale</h4>
+            <a href="mailto:commerciale@tecnosaldo.it">commerciale@tecnosaldo.it</a>
+          </div>
+        </div>
+        <div class="cont-row">
+          <span class="cr-icon">🌐</span>
+          <div>
+            <h4>Sito Web</h4>
+            <a href="https://www.tecnosaldo.it" target="_blank">www.tecnosaldo.it</a>
+          </div>
+        </div>
+        <div class="cont-row">
+          <span class="cr-icon">🕐</span>
+          <div>
+            <h4>Orari</h4>
+            <p>Lun–Ven: 08:00–18:00<br />Sabato: su appuntamento</p>
+          </div>
+        </div>
       </div>
 
-      <!-- Android -->
-      <div class="dl-card">
-        <div class="card-icon">🤖</div>
-        <h3>Android</h3>
-        <p>Android 8.0+. Disponibile sul Google Play Store.</p>
-        <a href="#" id="link-android">Vai su Play Store</a>
+      <div class="contact-form-box">
+        <h3>Richiedi una consulenza</h3>
+        <div class="form-group">
+          <label>Nome e Cognome</label>
+          <input type="text" placeholder="Mario Rossi" />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="mario@azienda.it" />
+        </div>
+        <div class="form-group">
+          <label>Telefono</label>
+          <input type="tel" placeholder="+39 ..." />
+        </div>
+        <div class="form-group">
+          <label>Interesse</label>
+          <select>
+            <option value="">Seleziona categoria...</option>
+            <option>Impianti Miller Electric</option>
+            <option>Impianti ESAB</option>
+            <option>Consumabili</option>
+            <option>DPI & Abbigliamento</option>
+            <option>Accessori TIG</option>
+            <option>Dischi Abrasivi</option>
+            <option>Formazione / Demo</option>
+            <option>Noleggio</option>
+            <option>Assistenza Tecnica</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Messaggio</label>
+          <textarea placeholder="Descrivi la tua esigenza..."></textarea>
+        </div>
+        <button class="btn-submit" onclick="sendForm()">Invia Richiesta ⚡</button>
       </div>
-
-      <!-- APK -->
-      <div class="dl-card">
-        <div class="card-icon">📦</div>
-        <h3>APK Diretto</h3>
-        <p>Installa manualmente il file APK su dispositivi Android.</p>
-        <a href="#" id="link-apk" download>Scarica APK</a>
-      </div>
-
-      <!-- Web App -->
-      <div class="dl-card">
-        <div class="card-icon">🌐</div>
-        <h3>Web App</h3>
-        <p>Accedi direttamente dal browser, senza installazioni.</p>
-        <a href="#" id="link-web">Apri nel browser</a>
-      </div>
-
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer id="contatti">
-    <p>© 2026 <strong>Tecnosaldo</strong> — Tutti i diritti riservati.</p>
-    <p style="margin-top:6px;">Per supporto: <a href="mailto:support@tecnosaldo.it" style="color:#00b4ff; text-decoration:none;">support@tecnosaldo.it</a></p>
+  <footer>
+    <div class="f-logo"><img src="logo.jpg" alt="Tecnosaldo" /></div>
+    <p>© 2025 Tecnosaldo · Via Aurelia 430/432, Sarzana (SP) · Distributore Ufficiale Miller Electric Toscana</p>
+    <div class="footer-links">
+      <a href="https://www.tecnosaldo.it" target="_blank">Web</a>
+      <a href="mailto:commerciale@tecnosaldo.it">Email</a>
+      <a href="tel:+393934775160">Tel</a>
+    </div>
   </footer>
 
-</div><!-- .page-wrapper -->
+</div>
 
-<!-- Three.js CDN -->
+<!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-
 <script>
-/* ─────────────────────────────────────────────
-   Sfondo 3D con Three.js
-   Particelle fluttuanti + griglia animata
-───────────────────────────────────────────── */
+/* ── Sfondo 3D Three.js con palette Tecnosaldo ── */
 (function () {
   const canvas = document.getElementById('bg-canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -450,101 +929,103 @@
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(0, 0, 30);
 
-  /* ── Particelle ── */
-  const N = 380;
-  const positions = new Float32Array(N * 3);
+  /* Particelle giallo-arancio (colore brand) */
+  const N = 320;
+  const pos = new Float32Array(N * 3);
+  const colors = new Float32Array(N * 3);
   for (let i = 0; i < N; i++) {
-    positions[i * 3]     = (Math.random() - 0.5) * 120;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 120;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 80;
+    pos[i*3]   = (Math.random()-0.5)*130;
+    pos[i*3+1] = (Math.random()-0.5)*130;
+    pos[i*3+2] = (Math.random()-0.5)*80;
+    const mix = Math.random();
+    colors[i*3]   = 1.0;
+    colors[i*3+1] = 0.6 + mix * 0.2;
+    colors[i*3+2] = 0.0 + mix * 0.05;
   }
-  const partGeo = new THREE.BufferGeometry();
-  partGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const partMat = new THREE.PointsMaterial({
-    color: 0x00b4ff,
-    size: 0.28,
-    transparent: true,
-    opacity: 0.65,
-    sizeAttenuation: true
-  });
-  scene.add(new THREE.Points(partGeo, partMat));
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const pMat = new THREE.PointsMaterial({ size: 0.22, vertexColors: true, transparent: true, opacity: 0.55, sizeAttenuation: true });
+  scene.add(new THREE.Points(pGeo, pMat));
 
-  /* ── Griglia wireframe in prospettiva ── */
-  const gridHelper = new THREE.GridHelper(200, 40, 0x1a1a3e, 0x111128);
-  gridHelper.position.y = -18;
-  gridHelper.rotation.x = 0.12;
-  scene.add(gridHelper);
+  /* Griglia scura */
+  const grid = new THREE.GridHelper(200, 36, 0x1a1200, 0x110d00);
+  grid.position.y = -18;
+  scene.add(grid);
 
-  /* ── Toro (elemento decorativo 3D) ── */
-  const torusGeo = new THREE.TorusKnotGeometry(5, 1.4, 120, 16);
-  const torusMat = new THREE.MeshPhongMaterial({
-    color: 0x1a1a4e,
-    emissive: 0x0a0a3a,
-    wireframe: false,
-    transparent: true,
-    opacity: 0.35
-  });
-  const torus = new THREE.Mesh(torusGeo, torusMat);
-  torus.position.set(18, 2, -8);
+  /* Toro knot (ingranaggio industriale) */
+  const torus = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(4.5, 1.1, 100, 14),
+    new THREE.MeshPhongMaterial({ color: 0x1a1000, emissive: 0x0a0800, wireframe: false, transparent: true, opacity: 0.3 })
+  );
+  torus.position.set(16, 3, -10);
   scene.add(torus);
 
-  /* ── Icosaedro decorativo ── */
-  const icoGeo = new THREE.IcosahedronGeometry(4.5, 1);
-  const icoMat = new THREE.MeshPhongMaterial({
-    color: 0x4a1a6e,
-    emissive: 0x2a0a4e,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.5
-  });
-  const ico = new THREE.Mesh(icoGeo, icoMat);
-  ico.position.set(-20, 6, -6);
+  /* Icosaedro wireframe */
+  const ico = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(5, 1),
+    new THREE.MeshPhongMaterial({ color: 0x2a1800, emissive: 0x1a0e00, wireframe: true, transparent: true, opacity: 0.4 })
+  );
+  ico.position.set(-20, 5, -6);
   scene.add(ico);
 
-  /* ── Luci ── */
-  scene.add(new THREE.AmbientLight(0x111133, 2));
-  const pLight1 = new THREE.PointLight(0x00b4ff, 2.5, 80);
-  pLight1.position.set(10, 20, 10);
-  scene.add(pLight1);
-  const pLight2 = new THREE.PointLight(0xa855f7, 1.8, 60);
-  pLight2.position.set(-15, -10, 5);
-  scene.add(pLight2);
+  /* Luci brand: giallo + bianco */
+  scene.add(new THREE.AmbientLight(0x100d00, 2));
+  const pl1 = new THREE.PointLight(0xFFB800, 2.5, 80);
+  pl1.position.set(8, 18, 10);
+  scene.add(pl1);
+  const pl2 = new THREE.PointLight(0xffffff, 1.2, 60);
+  pl2.position.set(-14, -8, 5);
+  scene.add(pl2);
 
-  /* ── Parallax mouse ── */
   let mx = 0, my = 0;
   document.addEventListener('mousemove', e => {
     mx = (e.clientX / window.innerWidth - 0.5) * 2;
     my = (e.clientY / window.innerHeight - 0.5) * 2;
   });
 
-  /* ── Resize ── */
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  /* ── Render loop ── */
   let t = 0;
-  function animate() {
+  (function animate() {
     requestAnimationFrame(animate);
-    t += 0.008;
-
-    torus.rotation.x = t * 0.4;
-    torus.rotation.y = t * 0.6;
-    ico.rotation.y = -t * 0.5;
-    ico.rotation.z = t * 0.3;
-
-    gridHelper.position.z = (t * 2) % 5 - 2.5;
-
-    camera.position.x += (mx * 4 - camera.position.x) * 0.04;
+    t += 0.007;
+    torus.rotation.x = t * 0.35;
+    torus.rotation.y = t * 0.55;
+    ico.rotation.y = -t * 0.45;
+    ico.rotation.z = t * 0.28;
+    grid.position.z = (t * 1.8) % 5 - 2.5;
+    camera.position.x += (mx * 3.5 - camera.position.x) * 0.04;
     camera.position.y += (-my * 2 - camera.position.y) * 0.04;
     camera.lookAt(scene.position);
-
     renderer.render(scene, camera);
-  }
-  animate();
+  })();
 })();
+
+/* ── Tab prodotti ── */
+function filterProd(cat) {
+  document.querySelectorAll('.prod-card').forEach(c => {
+    c.style.display = c.dataset.cat === cat ? '' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().replace(/ /g,'').includes(cat) || b.onclick.toString().includes(cat));
+  });
+}
+
+/* ── Form submit ── */
+function sendForm() {
+  const btn = document.querySelector('.btn-submit');
+  btn.textContent = '✅ Richiesta inviata!';
+  btn.style.background = '#2a7a2a';
+  setTimeout(() => {
+    btn.textContent = 'Invia Richiesta ⚡';
+    btn.style.background = '';
+  }, 3000);
+}
 </script>
 
 </body>
