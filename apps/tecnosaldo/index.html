@@ -1,1030 +1,883 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tecnosaldo — Distributore Ufficiale Miller Electric · Toscana</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Tecnosaldo — Distributore Ufficiale Miller Electric Toscana. Impianti MIG, TIG, MMA, consumabili, DPI, accessori. Sarzana (SP)."/>
+  <title>Tecnosaldo | Distributore Ufficiale Miller Electric · Toscana</title>
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --yellow: #FFB800;
-      --yellow-dark: #e6a200;
+      --y: #FFB800;
+      --yd: #e6a200;
       --bg: #07090f;
-      --navy: #0b0e1a;
-      --navy2: #111627;
-      --white: #ffffff;
-      --gray: rgba(255,255,255,0.55);
+      --nav: #050709;
+      --card: rgba(255,255,255,0.035);
       --border: rgba(255,255,255,0.08);
+      --bordery: rgba(255,184,0,0.25);
+      --gray: rgba(255,255,255,0.55);
+      --white: #fff;
     }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--white); overflow-x: hidden; }
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--white);
-      overflow-x: hidden;
-    }
+    /* ── CANVAS ── */
+    #bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-    #bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
+    .wrap { position:relative; z-index:1; }
 
-    .page-wrapper { position: relative; z-index: 1; }
+    /* ── SCROLL ANIMATIONS ── */
+    .anim { opacity:0; transform:translateY(28px); transition:opacity .6s ease, transform .6s ease; }
+    .anim.visible { opacity:1; transform:none; }
 
     /* ── HEADER ── */
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 48px;
-      background: rgba(7,9,15,0.82);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,184,0,0.15);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 56px;
+      background:rgba(5,7,9,.88);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(255,184,0,.18);
+      position:sticky; top:0; z-index:200;
     }
-
+    .logo-wrap { display:flex; align-items:center; text-decoration:none; }
     .logo-3d {
-      animation: logoFloat 5s ease-in-out infinite;
-      transform-style: preserve-3d;
+      animation:logoRock 5s ease-in-out infinite;
+      transform-style:preserve-3d;
+      filter:drop-shadow(0 0 16px rgba(255,184,0,.55));
     }
-    .logo-3d img {
-      height: 44px;
-      width: auto;
-      filter: drop-shadow(0 0 14px rgba(255,184,0,0.6));
-    }
-    @keyframes logoFloat {
-      0%,100% { transform: rotateY(0deg) rotateX(0deg); }
-      30%      { transform: rotateY(5deg) rotateX(1.5deg); }
-      70%      { transform: rotateY(-5deg) rotateX(-1.5deg); }
+    .logo-3d img { height:46px; width:auto; display:block; }
+    @keyframes logoRock {
+      0%,100%{ transform:rotateY(0deg) rotateX(0deg); }
+      30%{ transform:rotateY(6deg) rotateX(2deg); }
+      70%{ transform:rotateY(-6deg) rotateX(-2deg); }
     }
 
-    nav { display: flex; gap: 28px; align-items: center; }
-    nav a {
-      color: rgba(255,255,255,0.7);
-      text-decoration: none;
-      font-size: 0.88rem;
-      letter-spacing: 0.4px;
-      transition: color 0.2s;
-    }
-    nav a:hover { color: var(--yellow); }
+    /* Hamburger */
+    .ham { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+    .ham span { display:block; width:24px; height:2px; background:#fff; border-radius:2px; transition:.3s; }
+    .ham.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    .ham.open span:nth-child(2){ opacity:0; }
+    .ham.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+    nav { display:flex; gap:24px; align-items:center; }
+    nav a { color:rgba(255,255,255,.7); text-decoration:none; font-size:.85rem; letter-spacing:.3px; transition:color .2s; white-space:nowrap; }
+    nav a:hover, nav a.active { color:var(--y); }
     .nav-cta {
-      background: var(--yellow);
-      color: #000 !important;
-      font-weight: 700;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-size: 0.85rem !important;
-      transition: background 0.2s, transform 0.2s !important;
+      background:var(--y); color:#000 !important; font-weight:700;
+      padding:8px 20px; border-radius:8px; font-size:.83rem !important;
+      transition:background .2s, transform .2s !important;
     }
-    .nav-cta:hover { background: var(--yellow-dark) !important; transform: translateY(-1px); }
+    .nav-cta:hover { background:var(--yd) !important; transform:translateY(-1px); }
+
+    /* ── MOBILE NAV ── */
+    .mobile-nav {
+      display:none;
+      position:fixed; top:75px; left:0; right:0;
+      background:rgba(5,7,9,.97);
+      border-bottom:1px solid var(--bordery);
+      padding:20px 28px;
+      flex-direction:column; gap:18px;
+      z-index:199;
+    }
+    .mobile-nav.open { display:flex; }
+    .mobile-nav a { color:#fff; text-decoration:none; font-size:1rem; padding:8px 0; border-bottom:1px solid var(--border); }
+    .mobile-nav a:last-child { border:none; }
 
     /* ── HERO ── */
     .hero {
-      min-height: 94vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 60px 24px 48px;
-      gap: 22px;
+      min-height:96vh; display:flex; align-items:center; justify-content:center;
+      flex-direction:column; text-align:center; padding:80px 24px 60px; gap:22px;
     }
-
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--yellow);
-      background: rgba(255,184,0,0.08);
-      border: 1px solid rgba(255,184,0,0.3);
-      padding: 6px 18px;
-      border-radius: 20px;
+      display:inline-flex; align-items:center; gap:8px;
+      font-size:.7rem; letter-spacing:3px; text-transform:uppercase;
+      color:var(--y); background:rgba(255,184,0,.08);
+      border:1px solid rgba(255,184,0,.3); padding:6px 20px; border-radius:20px;
     }
-    .hero-badge::before { content: '⚡'; }
-
     .hero h1 {
-      font-size: clamp(2.6rem, 6.5vw, 5.4rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -1px;
-      animation: titleDepth 7s ease-in-out infinite;
+      font-size:clamp(2.8rem,7vw,5.8rem); font-weight:900; line-height:1.03;
+      letter-spacing:-1.5px; animation:titlePulse 7s ease-in-out infinite;
     }
-    .hero h1 .accent { color: var(--yellow); }
-    @keyframes titleDepth {
-      0%,100% { text-shadow: 5px 5px 0 rgba(255,184,0,0.18), 0 0 50px rgba(255,184,0,0.2); }
-      50%      { text-shadow: -5px -5px 0 rgba(255,184,0,0.12), 0 0 80px rgba(255,184,0,0.3); }
+    .hero h1 .y { color:var(--y); }
+    @keyframes titlePulse {
+      0%,100%{ text-shadow:5px 5px 0 rgba(255,184,0,.18), 0 0 60px rgba(255,184,0,.25); }
+      50%{ text-shadow:-5px -5px 0 rgba(255,184,0,.12), 0 0 90px rgba(255,184,0,.35); }
     }
+    .hero-sub { font-size:1.05rem; font-weight:600; color:rgba(255,255,255,.82); letter-spacing:.8px; }
+    .hero-sub em { color:var(--y); font-style:normal; }
+    .hero-desc { font-size:1rem; color:var(--gray); max-width:580px; line-height:1.8; }
 
-    .hero-sub {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.8);
-      letter-spacing: 1px;
+    .btn-row { display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+    .btn {
+      display:inline-flex; align-items:center; gap:11px; padding:13px 26px;
+      border-radius:12px; text-decoration:none; font-weight:700; font-size:.88rem;
+      transform-style:preserve-3d; transition:transform .25s, box-shadow .25s;
     }
-    .hero-sub em { color: var(--yellow); font-style: normal; }
+    .btn:hover { transform:translateY(-5px) scale(1.03); }
+    .btn-y { background:var(--y); color:#000; box-shadow:0 6px 28px rgba(255,184,0,.35); }
+    .btn-y:hover { box-shadow:0 16px 44px rgba(255,184,0,.5); }
+    .btn-o { background:rgba(255,255,255,.06); color:#fff; border:1.5px solid rgba(255,255,255,.14); }
+    .btn-o:hover { border-color:var(--y); color:var(--y); box-shadow:0 10px 28px rgba(255,184,0,.12); }
+    .bi { font-size:1.5rem; line-height:1; }
+    .bl { display:flex; flex-direction:column; text-align:left; }
+    .bl small { font-size:.63rem; font-weight:400; opacity:.7; }
+    .bl strong { font-size:.9rem; }
 
-    .hero-desc {
-      font-size: 1rem;
-      color: var(--gray);
-      max-width: 560px;
-      line-height: 1.75;
+    /* ── STATS BAR ── */
+    .stats {
+      display:flex; justify-content:center; flex-wrap:wrap; gap:0;
+      border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+      background:rgba(0,0,0,.3);
     }
+    .stat-item { padding:28px 40px; text-align:center; border-right:1px solid var(--border); flex:1; min-width:140px; }
+    .stat-item:last-child { border-right:none; }
+    .stat-num { font-size:2rem; font-weight:900; color:var(--y); }
+    .stat-label { font-size:.75rem; color:var(--gray); letter-spacing:1px; margin-top:4px; }
 
-    /* ── Download buttons ── */
-    .download-group {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 6px;
-    }
+    /* ── STRIPE ── */
+    .stripe { height:2px; background:linear-gradient(90deg,transparent,var(--y),transparent); opacity:.4; }
 
-    .btn-dl {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 13px 26px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      transform-style: preserve-3d;
-      transition: transform 0.25s, box-shadow 0.25s;
-      position: relative;
-    }
-    .btn-dl:hover {
-      transform: translateY(-5px) translateZ(6px) scale(1.03);
-    }
-    .btn-primary {
-      background: var(--yellow);
-      color: #000;
-      box-shadow: 0 6px 28px rgba(255,184,0,0.35);
-    }
-    .btn-primary:hover { box-shadow: 0 14px 40px rgba(255,184,0,0.5); }
-    .btn-dark {
-      background: rgba(255,255,255,0.06);
-      color: #fff;
-      border: 1.5px solid rgba(255,255,255,0.14);
-    }
-    .btn-dark:hover { border-color: var(--yellow); color: var(--yellow); box-shadow: 0 10px 30px rgba(255,184,0,0.15); }
+    /* ── SECTIONS ── */
+    .sec { max-width:1200px; margin:0 auto; padding:88px 32px; }
+    .full-sec { padding:88px 32px; }
+    .full-sec .inner { max-width:1200px; margin:0 auto; }
 
-    .btn-icon { font-size: 1.6rem; line-height: 1; }
-    .btn-label { display: flex; flex-direction: column; text-align: left; }
-    .btn-label small { font-size: 0.65rem; font-weight: 400; opacity: 0.75; }
-    .btn-label strong { font-size: 0.95rem; }
+    .sec-label { font-size:.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--y); margin-bottom:10px; }
+    .sec-title { font-size:clamp(1.7rem,3.5vw,2.8rem); font-weight:800; line-height:1.15; margin-bottom:14px; }
+    .sec-title .y { color:var(--y); }
+    .sec-desc { color:var(--gray); max-width:560px; line-height:1.75; margin-bottom:48px; font-size:.97rem; }
 
-    /* ── Divisore branded ── */
-    .stripe {
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
-      opacity: 0.5;
+    /* ── CARD BASE ── */
+    .card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:18px; padding:26px 22px;
+      transition:transform .3s, box-shadow .3s, border-color .3s;
+      transform-style:preserve-3d;
     }
-
-    /* ── SEZIONI comuni ── */
-    section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
-
-    .sec-label {
-      font-size: 0.7rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 10px;
-    }
-    .sec-title {
-      font-size: clamp(1.7rem, 3.5vw, 2.8rem);
-      font-weight: 800;
-      margin-bottom: 14px;
-      line-height: 1.15;
-    }
-    .sec-title .acc { color: var(--yellow); }
-    .sec-desc {
-      color: var(--gray);
-      max-width: 540px;
-      line-height: 1.7;
-      margin-bottom: 48px;
+    .card:hover {
+      transform:translateY(-9px) rotateX(3deg);
+      box-shadow:0 22px 55px rgba(255,184,0,.12);
+      border-color:var(--bordery);
     }
 
     /* ── CHI SIAMO ── */
-    .chi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-    .chi-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 24px;
-      transition: transform 0.3s, box-shadow 0.3s;
-      transform-style: preserve-3d;
-    }
-    .chi-card:hover {
-      transform: translateY(-8px) rotateX(3deg);
-      box-shadow: 0 20px 50px rgba(255,184,0,0.12);
-      border-color: rgba(255,184,0,0.25);
-    }
-    .chi-card .ci-icon { font-size: 2rem; margin-bottom: 12px; }
-    .chi-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: var(--yellow); }
-    .chi-card p { font-size: 0.82rem; color: var(--gray); line-height: 1.55; }
+    .chi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:18px; }
+    .chi-icon { font-size:2rem; margin-bottom:12px; }
+    .chi-h { font-size:.9rem; font-weight:700; margin-bottom:6px; color:var(--y); }
+    .chi-p { font-size:.8rem; color:var(--gray); line-height:1.6; }
 
     /* ── PRODOTTI ── */
-    #prodotti { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .search-bar {
+      display:flex; align-items:center; gap:12px; margin-bottom:24px;
+      background:rgba(255,255,255,.05); border:1px solid var(--border);
+      border-radius:12px; padding:12px 18px;
+    }
+    .search-bar input {
+      flex:1; background:transparent; border:none; outline:none;
+      color:#fff; font-size:.9rem; font-family:inherit;
+    }
+    .search-bar input::placeholder { color:rgba(255,255,255,.35); }
+    .search-icon { font-size:1.1rem; color:var(--y); }
 
-    .prod-tabs {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 36px;
+    .cat-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
+    .tab {
+      padding:7px 18px; border-radius:8px; border:1.5px solid var(--border);
+      background:transparent; color:var(--gray); font-size:.78rem; font-weight:600;
+      cursor:pointer; transition:all .2s; white-space:nowrap;
     }
-    .tab-btn {
-      padding: 8px 20px;
-      border-radius: 8px;
-      border: 1.5px solid var(--border);
-      background: transparent;
-      color: var(--gray);
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .tab-btn.active, .tab-btn:hover {
-      background: var(--yellow);
-      color: #000;
-      border-color: var(--yellow);
-    }
+    .tab:hover, .tab.on { background:var(--y); color:#000; border-color:var(--y); }
 
-    .prod-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .prod-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-      transform-style: preserve-3d;
-    }
-    .prod-card:hover {
-      transform: translateY(-8px) rotateX(3deg);
-      box-shadow: 0 20px 50px rgba(255,184,0,0.1);
-      border-color: rgba(255,184,0,0.3);
-    }
-    .prod-code {
-      font-size: 0.68rem;
-      letter-spacing: 1.5px;
-      color: var(--yellow);
-      font-family: monospace;
-      margin-bottom: 8px;
-    }
-    .prod-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
-    .prod-card p { font-size: 0.78rem; color: var(--gray); line-height: 1.5; }
-    .prod-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-    }
-    .tag {
-      font-size: 0.62rem;
-      padding: 3px 9px;
-      border-radius: 6px;
-      background: rgba(255,184,0,0.1);
-      color: var(--yellow);
-      letter-spacing: 0.5px;
-      font-weight: 600;
-    }
+    .prod-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:18px; }
+    .prod-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; transition:transform .3s, box-shadow .3s, border-color .3s; transform-style:preserve-3d; }
+    .prod-card:hover { transform:translateY(-8px) rotateX(3deg); box-shadow:0 20px 50px rgba(255,184,0,.1); border-color:var(--bordery); }
+    .prod-code { font-size:.65rem; letter-spacing:1.5px; color:var(--y); font-family:monospace; margin-bottom:8px; }
+    .prod-name { font-size:.9rem; font-weight:700; margin-bottom:7px; line-height:1.35; }
+    .prod-desc { font-size:.77rem; color:var(--gray); line-height:1.55; }
+    .prod-tags { display:flex; gap:5px; flex-wrap:wrap; margin-top:12px; }
+    .tag { font-size:.6rem; padding:3px 8px; border-radius:5px; background:rgba(255,184,0,.1); color:var(--y); letter-spacing:.4px; font-weight:600; }
+    .no-results { text-align:center; padding:40px; color:var(--gray); font-size:.9rem; display:none; }
 
-    /* ── DOWNLOAD APP ── */
-    #download {
-      background: linear-gradient(135deg, rgba(255,184,0,0.05), rgba(0,0,0,0));
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 80px 24px;
-    }
-    #download .inner { max-width: 1100px; margin: 0 auto; }
+    /* Load more */
+    .load-more-wrap { text-align:center; margin-top:32px; }
+    .btn-load { padding:11px 32px; border-radius:10px; border:1.5px solid var(--bordery); background:transparent; color:var(--y); font-weight:700; font-size:.85rem; cursor:pointer; transition:all .2s; }
+    .btn-load:hover { background:var(--y); color:#000; }
 
-    .dl-cards {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .dl-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 36px 28px;
-      width: 220px;
-      text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-      transform-style: preserve-3d;
-    }
-    .dl-card:hover {
-      transform: translateY(-10px) rotateX(4deg);
-      box-shadow: 0 24px 60px rgba(255,184,0,0.15);
-      border-color: rgba(255,184,0,0.3);
-    }
-    .dl-card .dc-icon { font-size: 3rem; margin-bottom: 16px; }
-    .dl-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
-    .dl-card p { font-size: 0.78rem; color: var(--gray); line-height: 1.5; }
-    .dl-card a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 9px 20px;
-      border-radius: 10px;
-      background: var(--yellow);
-      color: #000;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.82rem;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .dl-card a:hover { opacity: 0.85; transform: translateY(-2px); }
+    /* ── DOWNLOAD ── */
+    .dl-bg { background:linear-gradient(135deg,rgba(255,184,0,.06),transparent); }
+    .dl-cards { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+    .dl-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:34px 26px; width:210px; text-align:center; transition:transform .3s, box-shadow .3s, border-color .3s; transform-style:preserve-3d; }
+    .dl-card:hover { transform:translateY(-10px) rotateX(4deg); box-shadow:0 24px 60px rgba(255,184,0,.15); border-color:var(--bordery); }
+    .dl-icon { font-size:2.8rem; margin-bottom:14px; }
+    .dl-h { font-size:.92rem; font-weight:700; margin-bottom:7px; }
+    .dl-p { font-size:.76rem; color:var(--gray); line-height:1.5; }
+    .dl-btn { display:inline-block; margin-top:18px; padding:9px 20px; border-radius:10px; background:var(--y); color:#000; text-decoration:none; font-weight:700; font-size:.8rem; transition:opacity .2s, transform .2s; }
+    .dl-btn:hover { opacity:.85; transform:translateY(-2px); }
 
     /* ── SERVIZI ── */
-    #servizi { background: var(--navy); border-top: 1px solid var(--border); }
-    #servizi .inner { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
-
-    .serv-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .serv-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 24px;
-      transition: transform 0.3s, border-color 0.3s;
-      transform-style: preserve-3d;
-    }
-    .serv-card:hover {
-      transform: translateY(-7px) rotateX(3deg);
-      border-color: rgba(255,184,0,0.3);
-    }
-    .serv-card .s-icon { font-size: 2rem; margin-bottom: 14px; }
-    .serv-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; color: var(--yellow); }
-    .serv-card p { font-size: 0.8rem; color: var(--gray); line-height: 1.55; }
+    .serv-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:18px; }
+    .serv-icon { font-size:2rem; margin-bottom:14px; }
+    .serv-h { font-size:.9rem; font-weight:700; margin-bottom:7px; color:var(--y); }
+    .serv-p { font-size:.79rem; color:var(--gray); line-height:1.55; }
 
     /* ── CONTATTI ── */
-    #contatti { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .cont-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
+    .cont-rows { display:flex; flex-direction:column; gap:16px; }
+    .cont-row { display:flex; align-items:flex-start; gap:14px; background:var(--card); border:1px solid var(--border); border-radius:13px; padding:16px 18px; transition:border-color .2s; }
+    .cont-row:hover { border-color:var(--bordery); }
+    .cr-icon { font-size:1.4rem; flex-shrink:0; margin-top:2px; }
+    .cr-label { font-size:.68rem; color:var(--y); margin-bottom:3px; letter-spacing:1px; text-transform:uppercase; }
+    .cr-val { font-size:.86rem; color:rgba(255,255,255,.82); line-height:1.5; }
+    .cr-val a { color:rgba(255,255,255,.82); text-decoration:none; }
+    .cr-val a:hover { color:var(--y); }
 
-    .contatti-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: start;
+    .form-box { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:32px; }
+    .form-box h3 { font-size:1.05rem; font-weight:700; margin-bottom:22px; }
+    .fg { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+    .fg label { font-size:.68rem; color:var(--y); letter-spacing:1px; text-transform:uppercase; }
+    .fg input, .fg textarea, .fg select {
+      background:rgba(255,255,255,.05); border:1px solid var(--border);
+      border-radius:8px; color:#fff; padding:10px 13px; font-size:.86rem;
+      font-family:inherit; outline:none; transition:border-color .2s;
+      -webkit-appearance:none;
     }
-    @media (max-width: 700px) { .contatti-wrap { grid-template-columns: 1fr; } }
-
-    .cont-info { display: flex; flex-direction: column; gap: 20px; }
-    .cont-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 18px 20px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-    .cont-row .cr-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
-    .cont-row h4 { font-size: 0.75rem; color: var(--yellow); margin-bottom: 3px; letter-spacing: 1px; text-transform: uppercase; }
-    .cont-row p, .cont-row a { font-size: 0.88rem; color: rgba(255,255,255,0.8); text-decoration: none; line-height: 1.5; }
-    .cont-row a:hover { color: var(--yellow); }
-
-    .contact-form-box {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-    }
-    .contact-form-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 22px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-    .form-group label { font-size: 0.75rem; color: var(--yellow); letter-spacing: 1px; text-transform: uppercase; }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #fff;
-      padding: 10px 14px;
-      font-size: 0.88rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus { border-color: var(--yellow); }
-    .form-group textarea { resize: vertical; min-height: 90px; }
-    .form-group select option { background: #111; }
+    .fg input:focus, .fg textarea:focus, .fg select:focus { border-color:var(--y); }
+    .fg textarea { resize:vertical; min-height:88px; }
+    .fg select option { background:#111; }
+    .fg .err { font-size:.68rem; color:#ff6b6b; margin-top:3px; display:none; }
+    .fg.invalid .err { display:block; }
+    .fg.invalid input, .fg.invalid textarea, .fg.invalid select { border-color:#ff6b6b; }
     .btn-submit {
-      width: 100%;
-      padding: 12px;
-      background: var(--yellow);
-      color: #000;
-      font-weight: 700;
-      font-size: 0.92rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
+      width:100%; padding:12px; background:var(--y); color:#000;
+      font-weight:700; font-size:.9rem; border:none; border-radius:10px;
+      cursor:pointer; transition:background .2s, transform .2s;
     }
-    .btn-submit:hover { background: var(--yellow-dark); transform: translateY(-2px); }
+    .btn-submit:hover { background:var(--yd); transform:translateY(-2px); }
+    .form-success { display:none; text-align:center; padding:20px; color:var(--y); font-weight:700; }
+
+    /* ── WHATSAPP FLOAT ── */
+    .wa-float {
+      position:fixed; bottom:28px; right:28px; z-index:300;
+      width:56px; height:56px; border-radius:50%;
+      background:#25d366; display:flex; align-items:center; justify-content:center;
+      font-size:1.6rem; box-shadow:0 4px 20px rgba(37,211,102,.4);
+      text-decoration:none; transition:transform .25s, box-shadow .25s;
+      animation:waPulse 2.5s ease-in-out infinite;
+    }
+    .wa-float:hover { transform:scale(1.12); box-shadow:0 8px 32px rgba(37,211,102,.6); animation:none; }
+    @keyframes waPulse {
+      0%,100%{ box-shadow:0 4px 20px rgba(37,211,102,.4); }
+      50%{ box-shadow:0 4px 28px rgba(37,211,102,.7); }
+    }
 
     /* ── FOOTER ── */
     footer {
-      background: rgba(0,0,0,0.5);
-      border-top: 1px solid rgba(255,184,0,0.15);
-      padding: 32px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      background:rgba(0,0,0,.55); border-top:1px solid rgba(255,184,0,.18);
+      padding:28px 56px; display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:14px;
     }
-    footer p { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
-    footer .f-logo img { height: 32px; filter: brightness(0.7); }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a { font-size: 0.78rem; color: rgba(255,255,255,0.35); text-decoration: none; }
-    .footer-links a:hover { color: var(--yellow); }
+    .f-logo img { height:30px; }
+    .f-txt { font-size:.76rem; color:rgba(255,255,255,.35); line-height:1.6; }
+    .f-links { display:flex; gap:18px; }
+    .f-links a { font-size:.75rem; color:rgba(255,255,255,.35); text-decoration:none; }
+    .f-links a:hover { color:var(--y); }
 
-    /* ── Responsive ── */
-    @media (max-width: 640px) {
-      header { padding: 14px 20px; }
-      nav a:not(.nav-cta) { display: none; }
-      footer { flex-direction: column; text-align: center; padding: 24px 20px; }
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      header { padding:14px 20px; }
+      nav { display:none; }
+      .ham { display:flex; }
+      .sec, .full-sec { padding:60px 20px; }
+      footer { padding:22px 20px; flex-direction:column; text-align:center; }
+      .cont-grid { grid-template-columns:1fr; gap:28px; }
+    }
+    @media(max-width:480px){
+      .hero h1 { font-size:2.4rem; }
+      .stat-item { padding:20px 18px; }
+    }
+
+    /* ── 4K DPI ── */
+    @media(min-resolution:2dppx), (-webkit-min-device-pixel-ratio:2){
+      .logo-3d img { image-rendering:crisp-edges; }
     }
   </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<canvas id="bg"></canvas>
 
-<div class="page-wrapper">
+<div class="wrap">
 
-  <!-- HEADER -->
-  <header>
-    <a href="#" style="text-decoration:none;">
-      <div class="logo-3d">
-        <img src="logo.jpg" alt="Tecnosaldo" />
-      </div>
+<!-- WHATSAPP FLOAT -->
+<a class="wa-float" href="https://wa.me/393934775160" target="_blank" aria-label="WhatsApp Tecnosaldo">💬</a>
+
+<!-- HEADER -->
+<header>
+  <a class="logo-wrap" href="#">
+    <div class="logo-3d"><img src="data:image/jpeg;base64,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" alt="Tecnosaldo" /></div>
+  </a>
+  <nav>
+    <a href="#chi">Chi Siamo</a>
+    <a href="#prodotti">Prodotti</a>
+    <a href="#servizi">Servizi</a>
+    <a href="#download">App</a>
+    <a href="#contatti" class="nav-cta">Contattaci</a>
+  </nav>
+  <div class="ham" id="ham" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mnav">
+  <a href="#chi" onclick="closeMenu()">Chi Siamo</a>
+  <a href="#prodotti" onclick="closeMenu()">Prodotti</a>
+  <a href="#servizi" onclick="closeMenu()">Servizi</a>
+  <a href="#download" onclick="closeMenu()">Scarica App</a>
+  <a href="#contatti" onclick="closeMenu()">Contattaci</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-badge anim">⚡ Distributore Ufficiale Miller Electric · Toscana</div>
+  <h1 class="anim">Unione<br/><span class="y">perfetta.</span></h1>
+  <p class="hero-sub anim"><em>TECNOLOGIA</em> PER SALDARE. <em>PERSONE</em> PER SUPPORTARTI.</p>
+  <p class="hero-desc anim">
+    Vendita, assistenza e consulenza professionale in Liguria con i migliori brand del settore.
+    Impianti Miller Electric e ESAB, consumabili, DPI, dischi abrasivi e accessori TIG.
+  </p>
+  <div class="btn-row anim">
+    <a class="btn btn-y" href="#download">
+      <span class="bi">📱</span>
+      <span class="bl"><small>Scarica subito</small><strong>App Tecnosaldo</strong></span>
     </a>
-    <nav>
-      <a href="#chi-siamo">Chi Siamo</a>
-      <a href="#prodotti">Prodotti</a>
-      <a href="#servizi">Servizi</a>
-      <a href="#download">App</a>
-      <a href="#contatti" class="nav-cta">Contattaci</a>
-    </nav>
-  </header>
+    <a class="btn btn-o" href="#prodotti">
+      <span class="bi">📦</span>
+      <span class="bl"><small>Sfoglia il</small><strong>Catalogo 2025</strong></span>
+    </a>
+    <a class="btn btn-o" href="tel:+393934775160">
+      <span class="bi">📞</span>
+      <span class="bl"><small>Chiama ora</small><strong>+39 393 4775160</strong></span>
+    </a>
+  </div>
+</section>
 
-  <!-- HERO -->
-  <section class="hero" id="home" style="max-width:none;">
-    <div class="hero-badge">Distributore Ufficiale Miller Electric · Toscana</div>
-    <h1>Unione<br /><span class="accent">perfetta.</span></h1>
-    <p class="hero-sub">
-      <em>TECNOLOGIA</em> PER SALDARE. <em>PERSONE</em> PER SUPPORTARTI.
-    </p>
-    <p class="hero-desc">
-      Vendita, assistenza e consulenza professionale con i migliori brand del settore.
-      Impianti Miller Electric, ESAB, consumabili, DPI e accessori TIG.
-    </p>
-    <div class="download-group">
-      <a class="btn-dl btn-primary" href="#download">
-        <span class="btn-icon">📱</span>
-        <span class="btn-label">
-          <small>Scarica subito</small>
-          <strong>App Tecnosaldo</strong>
-        </span>
-      </a>
-      <a class="btn-dl btn-dark" href="#prodotti">
-        <span class="btn-icon">📦</span>
-        <span class="btn-label">
-          <small>Esplora il</small>
-          <strong>Catalogo 2025</strong>
-        </span>
-      </a>
-      <a class="btn-dl btn-dark" href="tel:+393934775160">
-        <span class="btn-icon">📞</span>
-        <span class="btn-label">
-          <small>Chiama ora</small>
-          <strong>+39 393 4775160</strong>
-        </span>
-      </a>
-    </div>
-  </section>
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item anim">
+    <div class="stat-num" data-target="350">0</div>
+    <div class="stat-label">PRODOTTI A CATALOGO</div>
+  </div>
+  <div class="stat-item anim">
+    <div class="stat-num" data-target="12">0</div>
+    <div class="stat-label">CATEGORIE</div>
+  </div>
+  <div class="stat-item anim">
+    <div class="stat-num" data-target="2">0</div>
+    <div class="stat-label">BRAND PRINCIPALI</div>
+  </div>
+  <div class="stat-item anim">
+    <div class="stat-num" data-target="100" data-suffix="%">0</div>
+    <div class="stat-label">ASSISTENZA CERTIFICATA</div>
+  </div>
+  <div class="stat-item anim">
+    <div class="stat-num" data-target="7">0</div>
+    <div class="stat-label">GIORNI SU 7 REPERIBILI</div>
+  </div>
+</div>
 
-  <div class="stripe"></div>
+<div class="stripe"></div>
 
-  <!-- CHI SIAMO -->
-  <section id="chi-siamo">
-    <p class="sec-label">Chi Siamo</p>
-    <h2 class="sec-title">La nostra <span class="acc">missione</span></h2>
-    <p class="sec-desc">
-      Tecnosaldo nasce in Toscana dalla passione autentica per la saldatura professionale.
-      Non forniamo solo prodotti: diventiamo il tuo partner tecnico, con risposta rapida
-      e soluzioni su misura per artigiani, officine e carpenterie.
-    </p>
-    <div class="chi-grid">
-      <div class="chi-card">
-        <div class="ci-icon">📍</div>
-        <h3>Presenza Costante</h3>
-        <p>Prima, durante e dopo ogni fornitura. Un referente dedicato per ogni cliente.</p>
-      </div>
-      <div class="chi-card">
-        <div class="ci-icon">🔧</div>
-        <h3>Supporto Tecnico</h3>
-        <p>Competenze reali sul campo. Intervento in sede, da remoto e telefonico.</p>
-      </div>
-      <div class="chi-card">
-        <div class="ci-icon">✅</div>
-        <h3>Serietà</h3>
-        <p>Rispettiamo ogni impegno preso con il cliente, senza eccezioni.</p>
-      </div>
-      <div class="chi-card">
-        <div class="ci-icon">⚡</div>
-        <h3>Innovazione</h3>
-        <p>Tecnologie d'avanguardia Miller e ESAB, Industria 4.0 e IoT per la saldatura.</p>
-      </div>
-      <div class="chi-card">
-        <div class="ci-icon">🌱</div>
-        <h3>Sostenibilità</h3>
-        <p>Impianti ad alta efficienza energetica, ridotto impatto ambientale.</p>
-      </div>
-      <div class="chi-card">
-        <div class="ci-icon">❤️</div>
-        <h3>Passione</h3>
-        <p>La saldatura è la nostra ragione d'essere. Persone di esperienza storica nel settore.</p>
-      </div>
-    </div>
-  </section>
+<!-- CHI SIAMO -->
+<section class="sec anim" id="chi">
+  <p class="sec-label">Chi Siamo</p>
+  <h2 class="sec-title">La nostra <span class="y">missione</span></h2>
+  <p class="sec-desc">Tecnosaldo nasce nel 2025 in Toscana dalla passione autentica per la saldatura professionale. Una realtà giovane, dinamica e fortemente orientata al cliente, con persone di esperienza storica nel settore.</p>
+  <div class="chi-grid">
+    <div class="card anim"><div class="chi-icon">📍</div><div class="chi-h">Presenza Costante</div><div class="chi-p">Prima, durante e dopo ogni fornitura. Un referente dedicato per ogni cliente.</div></div>
+    <div class="card anim"><div class="chi-icon">🔧</div><div class="chi-h">Supporto Tecnico</div><div class="chi-p">Competenze reali sul campo. Intervento in sede, da remoto e telefonico.</div></div>
+    <div class="card anim"><div class="chi-icon">✅</div><div class="chi-h">Serietà</div><div class="chi-p">Rispettiamo ogni impegno preso con il cliente, senza eccezioni.</div></div>
+    <div class="card anim"><div class="chi-icon">⚡</div><div class="chi-h">Innovazione</div><div class="chi-p">Tecnologie d'avanguardia Miller e ESAB, Industria 4.0 e IoT per la saldatura.</div></div>
+    <div class="card anim"><div class="chi-icon">🌱</div><div class="chi-h">Sostenibilità</div><div class="chi-p">Impianti ad alta efficienza energetica, ridotto impatto ambientale.</div></div>
+    <div class="card anim"><div class="chi-icon">❤️</div><div class="chi-h">Passione</div><div class="chi-p">La saldatura è la nostra ragione d'essere. Persone di esperienza storica nel settore.</div></div>
+  </div>
+</section>
 
-  <div class="stripe"></div>
+<div class="stripe"></div>
 
-  <!-- PRODOTTI -->
-  <div id="prodotti">
-    <section style="padding-bottom:0;">
-      <p class="sec-label">Catalogo 2025</p>
-      <h2 class="sec-title">I nostri <span class="acc">prodotti</span></h2>
-      <p class="sec-desc">
-        Distributore ufficiale Miller Electric per la Toscana. Gamma completa di impianti,
-        consumabili, DPI e accessori per la saldatura professionale.
-      </p>
-    </section>
+<!-- PRODOTTI -->
+<section class="sec" id="prodotti">
+  <p class="sec-label">Catalogo 2025</p>
+  <h2 class="sec-title anim">I nostri <span class="y">prodotti</span></h2>
+  <p class="sec-desc anim">Distributore ufficiale Miller Electric per la Toscana. Gamma completa di impianti, consumabili, DPI e accessori per la saldatura professionale.</p>
 
-    <div style="max-width:1100px;margin:0 auto;padding:0 24px 80px;">
-      <div class="prod-tabs">
-        <button class="tab-btn active" onclick="filterProd('miller')">Miller Electric</button>
-        <button class="tab-btn" onclick="filterProd('esab')">ESAB</button>
-        <button class="tab-btn" onclick="filterProd('consumabili')">Consumabili</button>
-        <button class="tab-btn" onclick="filterProd('dischi')">Dischi Abrasivi</button>
-        <button class="tab-btn" onclick="filterProd('dpi')">DPI</button>
-        <button class="tab-btn" onclick="filterProd('tig')">Accessori TIG</button>
-      </div>
-
-      <div class="prod-grid" id="prod-grid">
-
-        <!-- MILLER -->
-        <div class="prod-card" data-cat="miller">
-          <div class="prod-code">MILL907853001</div>
-          <h3>DELTAWELD 350 — 400V CE</h3>
-          <p>Generatore MIG 350A trifase 400V, duty cycle 100% a 300A. Compatibile trainafilo BlueFab.</p>
-          <div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">350A</span><span class="tag">TRIFASE</span></div>
-        </div>
-        <div class="prod-card" data-cat="miller">
-          <div class="prod-code">MILL907854001</div>
-          <h3>DELTAWELD 500 — Heavy Duty CE</h3>
-          <p>500A per produzione intensiva. Alimentazione 400V trifase, duty cycle 60% a 500A.</p>
-          <div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">500A</span><span class="tag">HEAVY DUTY</span></div>
-        </div>
-        <div class="prod-card" data-cat="miller">
-          <div class="prod-code">MILL907853003</div>
-          <h3>DELTAWELD 350 — Insight Core</h3>
-          <p>350A con monitoraggio Insight Core in tempo reale. Tracciabilità parametri, Industria 4.0.</p>
-          <div class="prod-tags"><span class="tag">MIG</span><span class="tag">350A</span><span class="tag">IoT</span></div>
-        </div>
-        <div class="prod-card" data-cat="miller">
-          <div class="prod-code">MILL907816003</div>
-          <h3>DYNASTY 210 AC/DC Auto-Line</h3>
-          <p>TIG AC/DC 210A. Auto-Line 120-480V, Squarewave 20-250Hz. Per inox, alluminio, titanio.</p>
-          <div class="prod-tags"><span class="tag">TIG AC/DC</span><span class="tag">210A</span><span class="tag">AUTO-LINE</span></div>
-        </div>
-        <div class="prod-card" data-cat="miller">
-          <div class="prod-code">MILL907819002</div>
-          <h3>DYNASTY 300 — Multiprocess</h3>
-          <p>TIG AC/DC + MMA DC 300A. Auto-Line 120-480V. Alluminio, inox, titanio.</p>
-          <div class="prod-tags"><span class="tag">TIG/MMA</span><span class="tag">300A</span><span class="tag">MULTIPROCESS</span></div>
-        </div>
-        <div class="prod-card" data-cat="miller">
-          <div class="prod-code">MILL907684001</div>
-          <h3>MAXSTAR 210 DX — Portabile</h3>
-          <p>Inverter MMA/TIG DC 210A. Auto-Line 120-480V. Leggerissimo, ideale per cantieri.</p>
-          <div class="prod-tags"><span class="tag">MMA/TIG</span><span class="tag">210A</span><span class="tag">CANTIERE</span></div>
-        </div>
-
-        <!-- ESAB -->
-        <div class="prod-card" data-cat="esab" style="display:none;">
-          <div class="prod-code">ESAB — REBEL</div>
-          <h3>ESAB Rebel Series</h3>
-          <p>Impianti multiprocesso ESAB per Toscana. Versatili, robusti, per ogni applicazione professionale.</p>
-          <div class="prod-tags"><span class="tag">MIG/MMA/TIG</span><span class="tag">MULTIPROCESSO</span></div>
-        </div>
-        <div class="prod-card" data-cat="esab" style="display:none;">
-          <div class="prod-code">ESAB — ROGUE</div>
-          <h3>ESAB Rogue Series</h3>
-          <p>Gamma Rogue per saldatura MMA e TIG. Portabilità e robustezza per uso in cantiere.</p>
-          <div class="prod-tags"><span class="tag">MMA</span><span class="tag">TIG</span><span class="tag">PORTABILE</span></div>
-        </div>
-        <div class="prod-card" data-cat="esab" style="display:none;">
-          <div class="prod-code">ESAB — K4000</div>
-          <h3>ESAB K4000</h3>
-          <p>Impianto professionale ESAB per applicazioni industriali in carpenteria metallica.</p>
-          <div class="prod-tags"><span class="tag">INDUSTRIALE</span><span class="tag">CARPENTERIA</span></div>
-        </div>
-
-        <!-- CONSUMABILI -->
-        <div class="prod-card" data-cat="consumabili" style="display:none;">
-          <div class="prod-code">CONSUMABILI — MMA</div>
-          <h3>Elettrodi MMA — Acciaio Carbonio</h3>
-          <p>Elettrodi MMA per acciaio al carbonio. Alta qualità, innesco facile, ridotti spruzzi.</p>
-          <div class="prod-tags"><span class="tag">MMA</span><span class="tag">ACCIAIO</span></div>
-        </div>
-        <div class="prod-card" data-cat="consumabili" style="display:none;">
-          <div class="prod-code">CONSUMABILI — MIG</div>
-          <h3>Fili MIG/MAG SG2</h3>
-          <p>Filo MIG/MAG SG2 per acciaio al carbonio. Cordoni regolari, alta produttività.</p>
-          <div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">SG2</span></div>
-        </div>
-        <div class="prod-card" data-cat="consumabili" style="display:none;">
-          <div class="prod-code">CONSUMABILI — INOX</div>
-          <h3>Consumabili Inox 308L / 316L</h3>
-          <p>Elettrodi, fili e bacchette TIG per AISI 304/308 e AISI 316. Qualità certificata.</p>
-          <div class="prod-tags"><span class="tag">INOX</span><span class="tag">308L</span><span class="tag">316L</span></div>
-        </div>
-
-        <!-- DISCHI -->
-        <div class="prod-card" data-cat="dischi" style="display:none;">
-          <div class="prod-code">DISCO — TAGLIO</div>
-          <h3>Dischi Taglio Ferro/Inox</h3>
-          <p>Dischi abrasivi da taglio per ferro e inox. Elevata velocità di taglio, lunga durata.</p>
-          <div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">FERRO</span><span class="tag">INOX</span></div>
-        </div>
-        <div class="prod-card" data-cat="dischi" style="display:none;">
-          <div class="prod-code">DISCO — SBAVATURA</div>
-          <h3>Dischi Sbavatura & Lamellari</h3>
-          <p>Dischi per sbavatura e molatura. Lamellari per finitura superficiale in carpenteria.</p>
-          <div class="prod-tags"><span class="tag">SBAVATURA</span><span class="tag">LAMELLARI</span><span class="tag">CARPENTERIA</span></div>
-        </div>
-
-        <!-- DPI -->
-        <div class="prod-card" data-cat="dpi" style="display:none;">
-          <div class="prod-code">DPI — GUANTI</div>
-          <h3>Guanti Protezione Saldatura</h3>
-          <p>Guanti DPI per saldatura MIG/MMA. Protezione termica, grip ottimale, comfort elevato.</p>
-          <div class="prod-tags"><span class="tag">DPI</span><span class="tag">GUANTI</span></div>
-        </div>
-        <div class="prod-card" data-cat="dpi" style="display:none;">
-          <div class="prod-code">DPI — ABBIGLIAMENTO</div>
-          <h3>Abbigliamento Ignifugo</h3>
-          <p>Tute e giacche ignifughe certificate per la protezione del saldatore professionista.</p>
-          <div class="prod-tags"><span class="tag">IGNIFUGO</span><span class="tag">CERTIFICATO</span></div>
-        </div>
-        <div class="prod-card" data-cat="dpi" style="display:none;">
-          <div class="prod-code">NEWCOVA.CS.01</div>
-          <h3>Ricambi Maschere & Caschi</h3>
-          <p>Vetri, gruppi ottici, testiere e cuffie per maschere auto-oscuranti di tutte le marche.</p>
-          <div class="prod-tags"><span class="tag">MASCHERE</span><span class="tag">RICAMBI</span></div>
-        </div>
-
-        <!-- TIG -->
-        <div class="prod-card" data-cat="tig" style="display:none;">
-          <div class="prod-code">NEWCOEL.CE.16</div>
-          <h3>Elettrodo Ceriato WC20 Ø 1.6mm</h3>
-          <p>Tungsteno ceriato 2% (WC20). Universale AC/DC, facile innesco HF, lunga durata. Colore: grigio.</p>
-          <div class="prod-tags"><span class="tag">TIG</span><span class="tag">CERIATO</span><span class="tag">AC/DC</span></div>
-        </div>
-        <div class="prod-card" data-cat="tig" style="display:none;">
-          <div class="prod-code">NEWCOEL.L2.16</div>
-          <h3>Elettrodo Lantaniato WL2 Ø 1.6mm</h3>
-          <p>Lantaniato 2% (WL2). Eccellente per DC+, stabilità d'arco superiore. Colore: blu.</p>
-          <div class="prod-tags"><span class="tag">TIG</span><span class="tag">LANTANIATO</span><span class="tag">DC</span></div>
-        </div>
-        <div class="prod-card" data-cat="tig" style="display:none;">
-          <div class="prod-code">NEWCOWP-17</div>
-          <h3>Corpo Torcia TIG WP-17 (150A)</h3>
-          <p>150A raffreddamento aria. Standard internazionale, compatibile con tutti i ricambi WP-17.</p>
-          <div class="prod-tags"><span class="tag">TORCIA</span><span class="tag">WP-17</span><span class="tag">150A</span></div>
-        </div>
-
-      </div>
-    </div>
+  <div class="search-bar anim">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="prod-search" placeholder="Cerca per nome, codice o descrizione..." oninput="filterProds()" />
   </div>
 
-  <div class="stripe"></div>
-
-  <!-- DOWNLOAD APP -->
-  <div id="download">
-    <div class="inner">
-      <p class="sec-label">App Mobile</p>
-      <h2 class="sec-title">Scarica l'<span class="acc">App</span></h2>
-      <p class="sec-desc">
-        Accedi al catalogo, richiedi preventivi e contatta il supporto direttamente
-        dal tuo smartphone. Disponibile su tutte le piattaforme.
-      </p>
-      <div class="dl-cards">
-        <div class="dl-card">
-          <div class="dc-icon"></div>
-          <h3>iPhone / iPad</h3>
-          <p>iOS 14+. Ottimizzata per tutti i dispositivi Apple.</p>
-          <a href="#" id="link-ios">App Store</a>
-        </div>
-        <div class="dl-card">
-          <div class="dc-icon">🤖</div>
-          <h3>Android</h3>
-          <p>Android 8.0+. Disponibile su Google Play Store.</p>
-          <a href="#" id="link-android">Play Store</a>
-        </div>
-        <div class="dl-card">
-          <div class="dc-icon">📦</div>
-          <h3>APK Diretto</h3>
-          <p>Installa il file APK manualmente su Android.</p>
-          <a href="#" id="link-apk" download>Scarica APK</a>
-        </div>
-        <div class="dl-card">
-          <div class="dc-icon">🌐</div>
-          <h3>Web App</h3>
-          <p>Accedi dal browser, senza installazioni.</p>
-          <a href="https://www.tecnosaldo.it" target="_blank">Apri nel browser</a>
-        </div>
-      </div>
-    </div>
+  <div class="cat-tabs anim" id="cat-tabs">
+    <button class="tab on" onclick="setTab(this,'all')">Tutti</button>
+    <button class="tab" onclick="setTab(this,'miller')">Miller Electric</button>
+    <button class="tab" onclick="setTab(this,'esab')">ESAB</button>
+    <button class="tab" onclick="setTab(this,'ferro')">Consumabili Ferro</button>
+    <button class="tab" onclick="setTab(this,'inox')">Consumabili Inox</button>
+    <button class="tab" onclick="setTab(this,'generici')">Consumabili Generici</button>
+    <button class="tab" onclick="setTab(this,'dischi')">Dischi Abrasivi</button>
+    <button class="tab" onclick="setTab(this,'dpi')">DPI</button>
+    <button class="tab" onclick="setTab(this,'maschere')">Maschere</button>
+    <button class="tab" onclick="setTab(this,'tig')">Accessori TIG</button>
   </div>
 
-  <!-- SERVIZI -->
-  <div id="servizi">
-    <div class="inner">
-      <p class="sec-label">Servizi & Supporto</p>
-      <h2 class="sec-title">Siamo con te <span class="acc">sempre</span></h2>
-      <p class="sec-desc">
-        Prima, durante e dopo ogni fornitura. Il team Tecnosaldo è pronto
-        per consulenze, interventi, formazione e noleggio.
-      </p>
-      <div class="serv-grid">
-        <div class="serv-card">
-          <div class="s-icon">🔍</div>
-          <h3>Consulenza Pre-Vendita</h3>
-          <p>Analisi del processo e selezione del prodotto corretto per ogni applicazione.</p>
-        </div>
-        <div class="serv-card">
-          <div class="s-icon">🎯</div>
-          <h3>Demo in Loco</h3>
-          <p>Dimostrazioni Miller e ESAB direttamente nel tuo stabilimento o cantiere.</p>
-        </div>
-        <div class="serv-card">
-          <div class="s-icon">🛠</div>
-          <h3>Assistenza Tecnica</h3>
-          <p>Supporto telefonico, da remoto e intervento tecnico in sede per tutti i brand.</p>
-        </div>
-        <div class="serv-card">
-          <div class="s-icon">🔩</div>
-          <h3>Ricambi Originali</h3>
-          <p>Disponibilità rapida di ricambi originali Miller Electric e accessori per tutti i brand.</p>
-        </div>
-        <div class="serv-card">
-          <div class="s-icon">🎓</div>
-          <h3>Formazione</h3>
-          <p>Corsi base e avanzati con rilascio di attestato di partecipazione certificato.</p>
-        </div>
-        <div class="serv-card">
-          <div class="s-icon">🚛</div>
-          <h3>Noleggio Impianti</h3>
-          <p>Soluzioni noleggio breve e lungo periodo per gestire i picchi produttivi.</p>
-        </div>
-      </div>
-    </div>
+  <div class="prod-grid" id="prod-grid">
+    <!-- MILLER -->
+    <div class="prod-card anim" data-cat="miller" data-kw="deltaweld 350 mig mag trifase ce mill907853001"><div class="prod-code">MILL907853001</div><div class="prod-name">DELTAWELD 350 400V CE W/14PIN</div><div class="prod-desc">Generatore MIG 350A trifase 400V con 14 pin. Duty cycle 100% a 300A. Compatibile trainafilo BlueFab.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">350A</span><span class="tag">TRIFASE</span><span class="tag">CE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="deltaweld 500 heavy duty mill907854001"><div class="prod-code">MILL907854001</div><div class="prod-name">DELTAWELD 500 400V CE W/14PIN</div><div class="prod-desc">500A heavy duty per produzione intensiva. Alimentazione 400V trifase, 14 pin. Duty cycle 60% a 500A.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">500A</span><span class="tag">HEAVY DUTY</span><span class="tag">CE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="deltaweld 350 insight core industria 4.0 mill907853003"><div class="prod-code">MILL907853003</div><div class="prod-name">DELTAWELD 350 INSIGHT CORE</div><div class="prod-desc">Deltaweld 350 con monitoraggio Insight Core in tempo reale. Tracciabilità parametri, Industria 4.0.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">350A</span><span class="tag">IoT</span><span class="tag">INDUSTRY 4.0</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="deltaweld 500 insight core automazione mill907854003"><div class="prod-code">MILL907854003</div><div class="prod-name">DELTAWELD 500 INSIGHT CORE</div><div class="prod-desc">500A con Insight Core per linee automatizzate. Piena tracciabilità dei parametri di saldatura.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">500A</span><span class="tag">AUTOMAZIONE</span><span class="tag">IoT</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="continuum 350 inverter mill907645"><div class="prod-code">MILL907645</div><div class="prod-name">CONTINUUM 350 CE</div><div class="prod-desc">MIG 350A con monitoraggio avanzato. Tecnologia inverter ad alta efficienza energetica. Uso industriale.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">350A</span><span class="tag">INVERTER</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="continuum 500 mill907648"><div class="prod-code">MILL907648</div><div class="prod-name">CONTINUUM 500 CE</div><div class="prod-desc">Continuum 500A per cicli produttivi prolungati. Massima affidabilità, riduzione consumi significativa.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">500A</span><span class="tag">CONTINUUM</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="dynasty 210 tig ac dc auto-line mill907816003"><div class="prod-code">MILL907816003</div><div class="prod-name">DYNASTY 210 AC/DC Auto-Line CPS</div><div class="prod-desc">TIG AC/DC 210A. Auto-Line 120-480V, Squarewave avanzato, frequenza AC 20-250Hz. Per inox, alluminio, titanio.</div><div class="prod-tags"><span class="tag">TIG AC/DC</span><span class="tag">210A</span><span class="tag">AUTO-LINE</span><span class="tag">CE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="dynasty 210 tigrunner water cooled mill907816004"><div class="prod-code">MILL907816004</div><div class="prod-name">DYNASTY 210 TIGRUNNER CE</div><div class="prod-desc">Dynasty 210 con raffreddatore TigRunner integrato. Set completo con torcia raffreddata ad acqua.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">210A</span><span class="tag">WATER COOLED</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="dynasty 300 multiprocess tig mma mill907819002"><div class="prod-code">MILL907819002</div><div class="prod-name">DYNASTY 300 MULTIPROCESS</div><div class="prod-desc">TIG AC/DC + MMA DC 300A. Auto-Line 120-480V. Per alluminio, inox, titanio. Frequenza AC 20-250Hz.</div><div class="prod-tags"><span class="tag">TIG/MMA</span><span class="tag">300A</span><span class="tag">MULTIPROCESS</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="dynasty 400 navale auto-line mill907858002"><div class="prod-code">MILL907858002</div><div class="prod-name">DYNASTY 400 Auto-Line 380-600V</div><div class="prod-desc">Dynasty 400A per TIG ad alta corrente su strutture navali. Auto-Line 380-600V, frequenza AC 20-250Hz.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">400A</span><span class="tag">NAVALE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="dynasty 800 offshore pesante mill907719002"><div class="prod-code">MILL907719002</div><div class="prod-name">DYNASTY 800 Auto-Line 380-575V</div><div class="prod-desc">TIG 800A per applicazioni pesanti. Auto-Line 380-575V. Per fonderie, strutture offshore, saldatura automatizzata.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">800A</span><span class="tag">OFFSHORE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="syncrowave 300 alluminio mill907782002"><div class="prod-code">MILL907782002</div><div class="prod-name">SYNCROWAVE 300 Power Source</div><div class="prod-desc">TIG AC/DC 300A per alluminio professionale. Advanced Squarewave 25-500Hz, bilanciamento regolabile.</div><div class="prod-tags"><span class="tag">TIG AC/DC</span><span class="tag">300A</span><span class="tag">ALLUMINIO</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="maxstar 210 mma portabile cantiere mill907684001"><div class="prod-code">MILL907684001</div><div class="prod-name">MAXSTAR 210 DX Auto-Line 120-480V</div><div class="prod-desc">Inverter MMA/TIG DC 210A. Leggerissimo, ideale per cantieri e field welding. Multi-voltaggio universale.</div><div class="prod-tags"><span class="tag">MMA/TIG</span><span class="tag">210A</span><span class="tag">PORTABILE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="maxstar 280 cantiere navale mill907539002"><div class="prod-code">MILL907539002</div><div class="prod-name">MAXSTAR 280 DX Auto-Line 208-575V</div><div class="prod-desc">MMA/TIG DC 280A. Auto-Line 208-575V. Arc Force e Hot Start regolabili. Alta portabilità per cantieri navali.</div><div class="prod-tags"><span class="tag">MMA/TIG</span><span class="tag">280A</span><span class="tag">CANTIERE NAVALE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="maxstar 400 strutturale mill907873002"><div class="prod-code">MILL907873002</div><div class="prod-name">MAXSTAR 400 Auto-Line 380-600V</div><div class="prod-desc">400A per applicazioni MMA/TIG DC su strutture pesanti. Auto-Line 380-600V. Massima stabilità dell'arco.</div><div class="prod-tags"><span class="tag">MMA/TIG</span><span class="tag">400A</span><span class="tag">STRUTTURALE</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="xmt 350 fieldpro arcreach mill907730001"><div class="prod-code">MILL907730001</div><div class="prod-name">XMT 350 FIELDPRO 208-575V</div><div class="prod-desc">Multiprocesso 350A con ArcReach integrato. Controllo remoto senza fili fino a 90m. Auto-Line 208-575V.</div><div class="prod-tags"><span class="tag">MULTIPROCESSO</span><span class="tag">350A</span><span class="tag">ARCREACH</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="subarc 1250 digitale navale automatizzato mill907621"><div class="prod-code">MILL907621</div><div class="prod-name">SUBARC AC/DC 1250 DIGITAL 50Hz</div><div class="prod-desc">Generatore arco sommerso 1250A digitale. Per saldatura automatizzata su grandi strutture navali e recipienti in pressione.</div><div class="prod-tags"><span class="tag">SAW</span><span class="tag">1250A</span><span class="tag">NAVALE</span><span class="tag">AUTOMATIZZATO</span></div></div>
+    <div class="prod-card anim" data-cat="miller" data-kw="subarc dc 1250 produzione mill907625"><div class="prod-code">MILL907625</div><div class="prod-name">SUBARC DC 1250 DIGITAL 50Hz</div><div class="prod-desc">Versione DC 1250A per arco sommerso ad alta produttività. Per carpenterie metalliche e produzione in serie.</div><div class="prod-tags"><span class="tag">SAW DC</span><span class="tag">1250A</span><span class="tag">PRODUZIONE</span></div></div>
+    <!-- ESAB -->
+    <div class="prod-card anim" data-cat="esab" data-kw="rebel emp 235ic multiprocesso smig esab7-3447"><div class="prod-code">ESAB7-3447</div><div class="prod-name">REBEL EMP 235ic — Multiprocesso</div><div class="prod-desc">MIG/MMA/TIG 235A con tecnologia sMIG per regolazione automatica. Display TFT a colori, 230V monofase.</div><div class="prod-tags"><span class="tag">MIG/MMA/TIG</span><span class="tag">235A</span><span class="tag">sMIG</span><span class="tag">ESAB</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="rogue es 180i mma inverter vrd esab7-5208"><div class="prod-code">ESAB7-5208</div><div class="prod-name">ROGUE ES 180i PRO — MMA Inverter</div><div class="prod-desc">MMA 180A con VRD per massima sicurezza in cantiere. Hot Start e Arc Force regolabili. 230V monofase.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">180A</span><span class="tag">VRD</span><span class="tag">ESAB</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="extreme k4000 torcia plasma esab esab61082008"><div class="prod-code">ESAB61082008</div><div class="prod-name">Extreme K4000 — Torcia 7" Plasma</div><div class="prod-desc">Torcia plasma Extreme K4000 con cavo, testa 7". Operativa fino a 120A. Alta durata, design ergonomico.</div><div class="prod-tags"><span class="tag">PLASMA</span><span class="tag">120A</span><span class="tag">ESAB</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="ok 48.00 elettrodi basici esab esabc48002530v0"><div class="prod-code">ESABC48002530V0</div><div class="prod-name">Elettrodi OK 48.00 Ø 2.5mm — VackPack</div><div class="prod-desc">Basici ESAB basso idrogeno H5. Per strutture critiche e acciai ad alto limite elastico. 3/4 VackPack.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">FERRO</span><span class="tag">BASICO H5</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="ok 48.00 elettrodi 3.2mm esab esabc48003240v0"><div class="prod-code">ESABC48003240V0</div><div class="prod-name">Elettrodi OK 48.00 Ø 3.2mm — VackPack</div><div class="prod-desc">Ø 3,2x450mm, standard europeo per basici strutturali. Bassa spruzzatura, arco stabile. 3/4 VackPack.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">FERRO</span><span class="tag">3.2MM</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="ok tubrod 15.14 filo animato esab esabfilo15.14"><div class="prod-code">ESABFILO15.14</div><div class="prod-name">Filo Animato OK TUBROD 15.14 Ø 1.2mm</div><div class="prod-desc">Filo animato rutilico Ø 1,2mm, 4x5kg. Per acciai strutturali. Alta produttività con gas CO2 o Ar/CO2.</div><div class="prod-tags"><span class="tag">FLUX-CORE</span><span class="tag">FERRO</span><span class="tag">ESAB</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="ok autrod 53.56 alluminio mig esab esabfilo53.56"><div class="prod-code">ESABFILO53.56</div><div class="prod-name">Filo Alluminio OK AUTROD 53.56 Ø 1.2mm</div><div class="prod-desc">Filo MIG alluminio AlMg5, Ø 1,2mm, bobina 7kg. Per serie 5xxx. Gas Ar puro. Qualità premium ESAB.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">ALLUMINIO</span><span class="tag">5356</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="shield-bright 316l filo animato inox esab esabc35fa12982v"><div class="prod-code">ESABC35FA12982V</div><div class="prod-name">Filo Animato Inox SHIELD-BRIGHT 316L Ø 1.2mm</div><div class="prod-desc">Filo animato inox Ø 1,2mm, bobina 15kg. Gas Ar/CO2. Eccellente resistenza corrosione. Scoria rimovibile.</div><div class="prod-tags"><span class="tag">FLUX-CORE</span><span class="tag">INOX 316L</span><span class="tag">ESAB</span></div></div>
+    <div class="prod-card anim" data-cat="esab" data-kw="ok 63.30 316l elettrodi inox esab esab6330252030"><div class="prod-code">ESAB6330252030</div><div class="prod-name">Elettrodi Inox OK 63.30 316L Ø 2.5mm</div><div class="prod-desc">MMA per inox Mo-legati 316/316L, Ø 2,5x300mm, 20 pz. Resistenza ai cloruri. EN ISO 3581-A.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">INOX 316L</span><span class="tag">ESAB</span></div></div>
+    <!-- FERRO -->
+    <div class="prod-card anim" data-cat="ferro" data-kw="elettrodo basico e7018 h4r 2.6mm jkpk-7018np-2.6-v.p"><div class="prod-code">JKPK-7018NP-2.6-V.P</div><div class="prod-name">Elettrodo Basico E7018-1 H4R Ø 2.6mm</div><div class="prod-desc">Basico basso idrogeno H4 per strutture critiche. AWS A5.1 E7018-1 H4R. Eccellente tenacità a basse temperature. Vacuum pack.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">FERRO</span><span class="tag">BASICO H4</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="elettrodo basico e7018 h4r 3.2mm navale jkpk-7018np-3:2-v.p"><div class="prod-code">JKPK-7018NP-3.2-V.P</div><div class="prod-name">Elettrodo Basico E7018-1 H4R Ø 3.2mm</div><div class="prod-desc">Ø 3,2x450mm. Per strutture navali, ponti, recipienti in pressione. Vacuum pack 3/4. Arco stabile.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">FERRO</span><span class="tag">NAVALE</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="elettrodo rutilico e40 2.5mm sogae40-25re"><div class="prod-code">SOGAE40-25RE</div><div class="prod-name">Elettrodo Rutilico E40 Ø 2.5mm</div><div class="prod-desc">Rutilico universale per acciai dolci. Arco stabile, scoria facilmente asportabile. Costruzioni metalliche e manutenzione.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">FERRO</span><span class="tag">RUTILICO</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="elettrodo basico p48m miller drypac 2.5mm mill71552504"><div class="prod-code">MILL71552504</div><div class="prod-name">Elettrodo Basico P48M Ø 2.5mm DryPac Miller</div><div class="prod-desc">Basico Miller P48M Ø 2,5x350mm, 6x2kg DryPac anti-umidità. H &lt; 5ml/100g. Per strutture critiche.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">FERRO</span><span class="tag">MILLER</span><span class="tag">DRYPAC</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="filo mig sg2 er70s-6 0.8mm 15kg jkper70s-0.8-15"><div class="prod-code">JKPER70S-0.8-15</div><div class="prod-name">Filo MIG SG2 ER70S-6 Ø 0.8mm — 15kg</div><div class="prod-desc">Filo ramato SG2 AWS A5.18 ER70S-6, bobina K300 15kg. Gas Ar/CO2 80/20 o CO2. Tolleranze strette per alimentazione regolare.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">FERRO</span><span class="tag">0.8MM</span><span class="tag">K300</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="filo mig sg2 er70s-6 1.0mm 15kg jkper70s-1.0-15"><div class="prod-code">JKPER70S-1.0-15</div><div class="prod-name">Filo MIG SG2 ER70S-6 Ø 1.0mm — 15kg</div><div class="prod-desc">Ø 1,0mm per spessori medi. Ottima fusione, ridotta spruzzatura, cordone di aspetto regolare. Bobina K300.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">FERRO</span><span class="tag">1.0MM</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="filo mig sg2 er70s-6 1.2mm industria jkper70s-1.2-15"><div class="prod-code">JKPER70S-1.2-15</div><div class="prod-name">Filo MIG SG2 ER70S-6 Ø 1.2mm — 15kg</div><div class="prod-desc">Ø 1,2mm per spessori maggiori e alta produttività. Compatibile con tutti i trainafilo professionali. Bobina K300.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">FERRO</span><span class="tag">1.2MM</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="filo animato e71t-1 h4 flux-core jkpk-71tlf-1.20-4.5-c-m"><div class="prod-code">JKPK-71TLF-1.20-4.5-C-M</div><div class="prod-name">Filo Animato E71T-1 H4 Ø 1.2mm — 4.5kg</div><div class="prod-desc">Filo animato rutilico AWS A5.20 E71T-1 H4. Alta produttività, scoria rimovibile. Per lavori in esterno.</div><div class="prod-tags"><span class="tag">FLUX-CORE</span><span class="tag">FERRO</span><span class="tag">E71T-1</span></div></div>
+    <div class="prod-card anim" data-cat="ferro" data-kw="bacchette tig er70s-6 2.0mm 5kg jkpjs-ter70s-2.0"><div class="prod-code">JKPJS-TER70S-2.0</div><div class="prod-name">Bacchette TIG ER70S-6 Ø 2.0mm — 5kg</div><div class="prod-desc">TIG acciaio dolce AWS A5.18 ER70S-6, Ø 2,0x1000mm, 5kg. Deposito liscio, ridotta porosità. Gas Ar 99,998%.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">FERRO</span><span class="tag">2.0MM</span></div></div>
+    <!-- INOX -->
+    <div class="prod-card anim" data-cat="inox" data-kw="cromarod 308l 2.5mm miller inox mill74302500"><div class="prod-code">MILL74302500</div><div class="prod-name">Elettrodo CROMAROD 308L Ø 2.5mm — Miller</div><div class="prod-desc">MMA per inox austenitici AISI 304/308. Basso carbonio (L). Conf. 3x2,5kg. EN ISO 3581-A E 19 9 L R.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">INOX 304/308</span><span class="tag">MILLER</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="cromarod 308l 3.2mm miller inox mill74303200"><div class="prod-code">MILL74303200</div><div class="prod-name">Elettrodo CROMAROD 308L Ø 3.2mm — Miller</div><div class="prod-desc">Ø 3,2x350mm per spessori maggiori. Conf. 3x3kg. Applicazioni strutturali e food-grade AISI 304/308.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">INOX 304/308</span><span class="tag">FOOD</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="filo mig sider 308lsi 1.2mm inox soge08s-12nsch"><div class="prod-code">SOGE08S-12NSCH</div><div class="prod-name">Filo MIG SIDER 308LSi Ø 1.2mm — 5kg</div><div class="prod-desc">MIG inox 304/308L con Silicio per migliore bagnabilità. Gas 98% Ar + 2% CO2. EN ISO 14343-A G 19 9 L Si.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">INOX 304/308</span><span class="tag">1.2MM</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="crinoxtig 308lsi bacchette tig 1.6mm miller mill93021016"><div class="prod-code">MILL93021016</div><div class="prod-name">Bacchette TIG CRINOXTIG 308LSi Ø 1.6mm</div><div class="prod-desc">TIG ER308LSi Miller Ø 1,6x1000mm 5kg. Gas Ar 99,998%. Cordone liscio, ideale food-grade e sanitario.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">INOX 304/308</span><span class="tag">FOOD</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="cromarod 316l 2.5mm miller inox offshore mill74402500"><div class="prod-code">MILL74402500</div><div class="prod-name">Elettrodo CROMAROD 316L Ø 2.5mm — Miller</div><div class="prod-desc">MMA AISI 316/316L. Ø 2,5x300mm, conf. 3x2,5kg. Resistenza al pitting in ambienti con cloruri e acidi organici.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">INOX 316L</span><span class="tag">CLORURI</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="cromarod 316l 3.2mm offshore miller mill74403200"><div class="prod-code">MILL74403200</div><div class="prod-name">Elettrodo CROMAROD 316L Ø 3.2mm — Miller</div><div class="prod-desc">Ø 3,2x350mm per strutturali su AISI 316. Impianti chimici, serbatoi aggressivi, offshore. Conf. 3x3kg.</div><div class="prod-tags"><span class="tag">MMA</span><span class="tag">INOX 316L</span><span class="tag">OFFSHORE</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="crinoxtig 316lsi bacchette tig 2.0mm miller mill93101020"><div class="prod-code">MILL93101020</div><div class="prod-name">Bacchette TIG CRINOXTIG 316LSi Ø 2.0mm</div><div class="prod-desc">TIG ER316LSi Miller Ø 2,0x1000mm 5kg. Per tubi e raccordi in ambienti chimici e marini. Gas Ar 99,998%.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">INOX 316L</span><span class="tag">MARINO</span></div></div>
+    <div class="prod-card anim" data-cat="inox" data-kw="filo mig 316lsi 1.2mm inox tibof36s12"><div class="prod-code">TIBOF36S12</div><div class="prod-name">Filo MIG AISI 316LSi Ø 1.2mm</div><div class="prod-desc">Filo MIG inox 316L con Silicio. Cordone liscio e lucido, bassa spruzzatura. Gas 98% Ar + 2% CO2.</div><div class="prod-tags"><span class="tag">MIG</span><span class="tag">INOX 316L</span><span class="tag">1.2MM</span></div></div>
+    <!-- GENERICI -->
+    <div class="prod-card anim" data-cat="generici" data-kw="torcia mig mb 501d 4mt 500a jkpbz501m4"><div class="prod-code">JKPBZ501M4</div><div class="prod-name">Torcia MIG MB 501D Blu Line 4mt</div><div class="prod-desc">Torcia MIG 500A raffreddamento aria, 4mt. Euro connettore universale. Corpo ergonomico, trigger sicuro.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">500A</span><span class="tag">4MT</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="torcia mig mb 501d 5mt jkpbz501m5"><div class="prod-code">JKPBZ501M5</div><div class="prod-name">Torcia MIG MB 501D Blu Line 5mt</div><div class="prod-desc">Versione 5mt per maggiore libertà di movimento. Collo orientabile. Stesse specifiche tecniche del 4mt.</div><div class="prod-tags"><span class="tag">MIG/MAG</span><span class="tag">500A</span><span class="tag">5MT</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="riduttore argon miscela 2 manometri newcova.rd.1008"><div class="prod-code">NEWCOVA.RD.1008</div><div class="prod-name">Riduttore Argon/Miscela 2 Manometri</div><div class="prod-desc">2 manometri AP/BP per Argon e miscele Ar/CO2. Attacco diretto, flussimetro integrato. Corpo in ottone.</div><div class="prod-tags"><span class="tag">GAS</span><span class="tag">ARGON</span><span class="tag">MIG/TIG</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="riduttore argon flussimetro tig newcova.rd.1010"><div class="prod-code">NEWCOVA.RD.1010</div><div class="prod-name">Riduttore Argon con Flussimetro</div><div class="prod-desc">Flussimetro verticale per Argon e miscele. Portata 0-25 l/min, pressione max 300bar. Per TIG e MIG inox.</div><div class="prod-tags"><span class="tag">GAS</span><span class="tag">ARGON</span><span class="tag">TIG</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="riduttore co2 2 manometri mig newcova.rd.1007"><div class="prod-code">NEWCOVA.RD.1007</div><div class="prod-name">Riduttore CO2 2 Manometri</div><div class="prod-desc">Per CO2, attacco standard. Per saldatura MIG/MAG su acciai dolci. Alta affidabilità.</div><div class="prod-tags"><span class="tag">GAS</span><span class="tag">CO2</span><span class="tag">MIG</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="cavo saldatura 50mm2 gomma 50mt jkpcm-50 blu"><div class="prod-code">JKPCM-50 BLU</div><div class="prod-name">Cavo Saldatura 50mm² Gomma H01N2-D — 50mt</div><div class="prod-desc">Cavo ramato 50mm² gomma neoprene H01N2-D, bobina 50mt. Guaina blu ultra-flessibile. Tensione max 600V. Conforme CE.</div><div class="prod-tags"><span class="tag">CAVO</span><span class="tag">50MM²</span><span class="tag">50MT</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="cavo saldatura 70mm2 alta corrente jkpcm-70 blu"><div class="prod-code">JKPCM-70 BLU</div><div class="prod-name">Cavo Saldatura 70mm² Gomma H01N2-D — 50mt</div><div class="prod-desc">70mm² in neoprene, 50mt. Per impianti fino a 500A. Massima flessibilità anche a basse temperature.</div><div class="prod-tags"><span class="tag">CAVO</span><span class="tag">70MM²</span><span class="tag">500A</span></div></div>
+    <div class="prod-card anim" data-cat="generici" data-kw="presa pannello dinse femmina 50mm2 newcotx.ppf.355"><div class="prod-code">NEWCOTX.PPF.355</div><div class="prod-name">Presa Pannello Dinse Femmina 50mm²</div><div class="prod-desc">Presa pannello femmina Dinse 50mm². Corpo ottone, isolamento nylon. Per collegamento saldatrici professionali.</div><div class="prod-tags"><span class="tag">DINSE</span><span class="tag">50MM²</span><span class="tag">CONNETTORE</span></div></div>
+    <!-- DISCHI -->
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco taglio t41 115x1.6mm ferro inox jkpp804111516m"><div class="prod-code">JKPP804111516M</div><div class="prod-name">Disco Taglio T41 Ø 115x1.6mm — Ferro/Inox</div><div class="prod-desc">Disco Pegatec T41 Ø 115x1,6mm per ferro e inox. Alta velocità di taglio, minima bavatura. EN 12413.</div><div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">115MM</span><span class="tag">FERRO/INOX</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco taglio t41 115x1.6mm inox aisi304 316 jkpp804111516ss"><div class="prod-code">JKPP804111516SS</div><div class="prod-name">Disco Taglio T41 Ø 115x1.6mm — Inox Only</div><div class="prod-desc">T41 Ø 115x1,6mm specifico inox. Formulazione senza ferro/zolfo/cloro. Per AISI 304/316.</div><div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">115MM</span><span class="tag">INOX</span><span class="tag">AISI 304/316</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco taglio t41 125x1.6mm ferro jkpp804112516m"><div class="prod-code">JKPP804112516M</div><div class="prod-name">Disco Taglio T41 Ø 125x1.6mm — Ferro</div><div class="prod-desc">Disco T41 Ø 125x1,6mm per ferro e acciai dolci. Elevata resa, taglio preciso, lunga durata.</div><div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">125MM</span><span class="tag">FERRO</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco taglio t41 125x1.6mm alluminio jkpp804112516a"><div class="prod-code">JKPP804112516A</div><div class="prod-name">Disco Taglio T41 Ø 125x1.6mm — Alluminio</div><div class="prod-desc">Disco T41 Ø 125x1,6mm specifico alluminio. Evita incollature. Taglio netto su leghe Al.</div><div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">125MM</span><span class="tag">ALLUMINIO</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco taglio 230x1.9mm inox grande jkpp804123019"><div class="prod-code">JKPP804123019</div><div class="prod-name">Disco Taglio T41 Ø 230x1.9mm — Inox</div><div class="prod-desc">Disco grande T41 Ø 230x1,9mm per smerigliatrici 230mm. Per tagli profondi su inox e acciai speciali.</div><div class="prod-tags"><span class="tag">TAGLIO</span><span class="tag">230MM</span><span class="tag">INOX</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco lamellare t27 115mm grana 40 jkpez115-40"><div class="prod-code">JKPEZ115-40</div><div class="prod-name">Disco Lamellare T27 Ø 115mm — Grana 40</div><div class="prod-desc">Disco a lamelle supporto fibrato T27 Ø 115mm grana 40. Per sgrossatura su ferro, inox, acciai speciali.</div><div class="prod-tags"><span class="tag">LAMELLARE</span><span class="tag">115MM</span><span class="tag">G40</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco lamellare t27 115mm grana 60 finitura jkpez115-60"><div class="prod-code">JKPEZ115-60</div><div class="prod-name">Disco Lamellare T27 Ø 115mm — Grana 60</div><div class="prod-desc">Disco a lamelle T27 Ø 115mm grana 60. Per finitura intermedia su ferro e acciai. Bilanciamento ottimale.</div><div class="prod-tags"><span class="tag">LAMELLARE</span><span class="tag">115MM</span><span class="tag">G60</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="mola sbavatura t27 115x6.4mm ferro jkpp802711564m"><div class="prod-code">JKPP802711564M</div><div class="prod-name">Mola Sbavatura T27 Ø 115x6.4mm — Ferro</div><div class="prod-desc">Mola da sbavatura Pegatec T27 Ø 115x6,4mm per ferro. Per sbavatura giunti, ripristino superfici, angoli.</div><div class="prod-tags"><span class="tag">SBAVATURA</span><span class="tag">115MM</span><span class="tag">FERRO</span></div></div>
+    <div class="prod-card anim" data-cat="dischi" data-kw="disco beowulf premium sbavatura 115x8mm jkpspc80271158"><div class="prod-code">JKPSPC80271158</div><div class="prod-name">Disco Beowulf Premium T27 Ø 115x8mm</div><div class="prod-desc">Disco Beowulf premium T27 Ø 115x8mm per sbavatura professionale. Alta durata, aggressività costante.</div><div class="prod-tags"><span class="tag">SBAVATURA</span><span class="tag">115MM</span><span class="tag">PREMIUM</span></div></div>
+    <!-- DPI -->
+    <div class="prod-card anim" data-cat="dpi" data-kw="guanto tig pro miller taglia 8 kevlar mill758081001"><div class="prod-code">MILL758081001</div><div class="prod-name">Guanto TIG PRO Miller — Taglia 8</div><div class="prod-desc">Spaccato bovino morbido, cuciture Kevlar, polsino corto rinforzato. EN 12477 Tipo B, protezione termica Classe 2.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">KEVLAR</span><span class="tag">EN 12477</span><span class="tag">TG.8</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="guanto tig pro miller taglia 9 mill758081002"><div class="prod-code">MILL758081002</div><div class="prod-name">Guanto TIG PRO Miller — Taglia 9</div><div class="prod-desc">Massima sensibilità tattile per TIG di precisione. Cuciture Kevlar, EN 12477 Tipo B. Taglia 9.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">KEVLAR</span><span class="tag">EN 12477</span><span class="tag">TG.9</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="guanto mig mma crosta kevlar newcova.gu.138"><div class="prod-code">NEWCOVA.GU.138</div><div class="prod-name">Guanto MIG/MMA Crosta con Kevlar</div><div class="prod-desc">Crosta rossa con cuciture Kevlar ignifugo. Protezione termica Classe 3, EN 12477 Tipo A. Per MMA/MIG.</div><div class="prod-tags"><span class="tag">MIG/MMA</span><span class="tag">KEVLAR CL.3</span><span class="tag">EN 12477A</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="guanto alte temperature alluminizzato fonderia newcova.gu.145"><div class="prod-code">NEWCOVA.GU.145</div><div class="prod-name">Guanto Alte Temperature Alluminizzato</div><div class="prod-desc">Dorso alluminizzato riflettente per ambienti con elevata irradiazione. Per fonderie, forge e pre-riscaldo.</div><div class="prod-tags"><span class="tag">ALTE TEMP</span><span class="tag">ALLUMINIZZATO</span><span class="tag">FONDERIA</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="giacca ignifuga flame retardant en11611 sirmc5414r848"><div class="prod-code">SIRMC5414R848</div><div class="prod-name">Giacca Ignifuga Flame Retardant Tg. 48</div><div class="prod-desc">Tessuto flame retardant smeraldo. EN ISO 11611 Classe 2. Cuciture Kevlar, bottoni metallici. Taglia 48.</div><div class="prod-tags"><span class="tag">GIACCA</span><span class="tag">IGNIFUGO</span><span class="tag">EN11611 CL.2</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="pantalone ignifugo flame retardant en11611 sirmc5411r848"><div class="prod-code">SIRMC5411R848</div><div class="prod-name">Pantalone Ignifugo Flame Retardant Tg. 48</div><div class="prod-desc">Pantalone flame retardant EN ISO 11611. Protezione da scintille e proiezioni metallo fuso. Taglia 48.</div><div class="prod-tags"><span class="tag">PANTALONE</span><span class="tag">IGNIFUGO</span><span class="tag">EN11611</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="grembiule crosta rinforzato cuoio 60x110 tripgr61r"><div class="prod-code">TRIPGR61R</div><div class="prod-name">Grembiule Crosta Rinforzato 60x110cm</div><div class="prod-desc">Crosta di cuoio rinforzato 60x110cm per saldatura verticale. Lacci regolabili, doppio strato zona critica.</div><div class="prod-tags"><span class="tag">GREMBIULE</span><span class="tag">CUOIO</span><span class="tag">60x110</span></div></div>
+    <div class="prod-card anim" data-cat="dpi" data-kw="giacca saldatore cuoio bordata kevlar trigsbt"><div class="prod-code">TRIGSBT</div><div class="prod-name">Giacca Saldatore Crosta Bordata Kevlar</div><div class="prod-desc">Crosta di cuoio bordata, cuciture Kevlar, colletto alto. EN ISO 11611 Classe 2 — massima protezione.</div><div class="prod-tags"><span class="tag">GIACCA</span><span class="tag">CUOIO</span><span class="tag">KEVLAR CL.2</span></div></div>
+    <!-- MASCHERE -->
+    <div class="prod-card anim" data-cat="maschere" data-kw="vetro incolore protezione 75x98mm newcova.vb.001"><div class="prod-code">NEWCOVA.VB.001</div><div class="prod-name">Vetro Incolore Protezione 75x98mm</div><div class="prod-desc">Vetro incolore trasparente 75x98mm per maschere standard. Protezione contro spruzzi e schegge. Spessore 2mm.</div><div class="prod-tags"><span class="tag">VETRO</span><span class="tag">75x98</span><span class="tag">INCOLORE</span></div></div>
+    <div class="prod-card anim" data-cat="maschere" data-kw="vetro inattinico 75x98mm din 11 mig mag newcova.vi.021d11"><div class="prod-code">NEWCOVA.VI.021D11</div><div class="prod-name">Vetro Inattinico 75x98mm DIN 11</div><div class="prod-desc">Vetro inattinico 75x98mm gradazione DIN 11. Per saldatura MIG/MAG ad alta corrente. EN 169 certificato.</div><div class="prod-tags"><span class="tag">VETRO</span><span class="tag">DIN 11</span><span class="tag">MIG/MAG</span></div></div>
+    <div class="prod-card anim" data-cat="maschere" data-kw="vetro inattinico din 12 plasma newcova.vi.021d12"><div class="prod-code">NEWCOVA.VI.021D12</div><div class="prod-name">Vetro Inattinico 75x98mm DIN 12</div><div class="prod-desc">Vetro inattinico DIN 12 per saldatura ad alta intensità e processi plasma. 75x98mm. EN 169.</div><div class="prod-tags"><span class="tag">VETRO</span><span class="tag">DIN 12</span><span class="tag">PLASMA</span></div></div>
+    <div class="prod-card anim" data-cat="maschere" data-kw="lastrina policarbonato interna 75x98mm newcova.va.021"><div class="prod-code">NEWCOVA.VA.021</div><div class="prod-name">Lastrina Policarbonato Interna 75x98mm</div><div class="prod-desc">Lastrina in policarbonato 75x98mm per protezione interna gruppo ottico. Evita rigature al filtro auto-oscurante.</div><div class="prod-tags"><span class="tag">POLICARBONATO</span><span class="tag">75x98</span><span class="tag">RICAMBIO</span></div></div>
+    <div class="prod-card anim" data-cat="maschere" data-kw="testiera regolabile universale casco newcova.ca.006"><div class="prod-code">NEWCOVA.CA.006</div><div class="prod-name">Testiera Regolabile Universale</div><div class="prod-desc">Testiera di ricambio per caschi da saldatura. Regolabile in altezza e profondità. Compatibile con la maggior parte dei caschi.</div><div class="prod-tags"><span class="tag">TESTIERA</span><span class="tag">UNIVERSALE</span><span class="tag">RICAMBIO</span></div></div>
+    <div class="prod-card anim" data-cat="maschere" data-kw="cuffia cotone comfort blu caschi newcova.cs.01"><div class="prod-code">NEWCOVA.CS.01</div><div class="prod-name">Cuffia Protettiva in Cotone — Blu</div><div class="prod-desc">Cuffia interna in cotone per caschi da saldatura. Assorbe il sudore, lavabile. Migliora il comfort prolungato.</div><div class="prod-tags"><span class="tag">CUFFIA</span><span class="tag">COTONE</span><span class="tag">COMFORT</span></div></div>
+    <div class="prod-card anim" data-cat="maschere" data-kw="occhiali monolente policarbonato trasparente en166 newcova.olt.80"><div class="prod-code">NEWCOVA.OLT.80</div><div class="prod-name">Occhiali Monolente Policarbonato Trasparente</div><div class="prod-desc">Occhiali di protezione monolente in policarbonato trasparente. Per sbavatura, molatura e grinding. EN 166.</div><div class="prod-tags"><span class="tag">OCCHIALI</span><span class="tag">POLICARBONATO</span><span class="tag">EN 166</span></div></div>
+    <!-- TIG -->
+    <div class="prod-card anim" data-cat="tig" data-kw="elettrodo ceriato wc20 1.6mm ac dc grigio newcoel.ce.16"><div class="prod-code">NEWCOEL.CE.16</div><div class="prod-name">Elettrodo Ceriato WC20 Ø 1.6mm</div><div class="prod-desc">Tungsteno ceriato 2% (WC20) Ø 1,6mm x 175mm. Universale AC/DC, facile innesco HF, lunga durata. Colore: grigio.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">CERIATO</span><span class="tag">AC/DC</span><span class="tag">WC20</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="elettrodo ceriato wc20 2.4mm universale newcoel.ce.24"><div class="prod-code">NEWCOEL.CE.24</div><div class="prod-name">Elettrodo Ceriato WC20 Ø 2.4mm</div><div class="prod-desc">Ceriato 2% Ø 2,4mm, correnti 150-250A. Per inox, acciaio, rame. Universale AC/DC. Colore: grigio.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">CERIATO</span><span class="tag">2.4MM</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="elettrodo lantaniato wl2 1.6mm dc blu newcoel.l2.16"><div class="prod-code">NEWCOEL.L2.16</div><div class="prod-name">Elettrodo Lantaniato WL2 Ø 1.6mm</div><div class="prod-desc">Lantaniato 2% (WL2) Ø 1,6mm. Eccellente per DC+, stabilità d'arco superiore alla ceria. Colore: blu.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">LANTANIATO</span><span class="tag">DC</span><span class="tag">WL2</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="elettrodo puro w20 1.6mm alluminio verde newcoel.p.16"><div class="prod-code">NEWCOEL.P.16</div><div class="prod-name">Elettrodo Puro W20 Ø 1.6mm</div><div class="prod-desc">Tungsteno puro (W20) Ø 1,6mm. Per TIG AC su alluminio e leghe Al. Forma punta a sfera in AC. Colore: verde.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">PURO AC</span><span class="tag">ALLUMINIO</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="elettrodo toriato wr20 1.6mm inox titanio rosso newcoel.wr.16"><div class="prod-code">NEWCOEL.WR.16</div><div class="prod-name">Elettrodo Toriato WR20 Ø 1.6mm</div><div class="prod-desc">Toriato rosso WR20 Ø 1,6mm. Massima durata, per DC- su inox, titanio, leghe nichel. Colore: rosso.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">TORIATO DC</span><span class="tag">INOX/TITANIO</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="torcia tig wp-17 150a aria newcowp-17"><div class="prod-code">NEWCOWP-17</div><div class="prod-name">Corpo Torcia TIG WP-17 (150A Aria)</div><div class="prod-desc">150A raffreddamento aria. Standard internazionale, compatibile con tutti i ricambi WP-17. Connessione universale.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">WP-17</span><span class="tag">150A</span><span class="tag">ARIA</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="torcia tig wp-18 350a aria newcowp-18"><div class="prod-code">NEWCOWP-18</div><div class="prod-name">Corpo Torcia TIG WP-18 (350A Aria)</div><div class="prod-desc">350A raffreddamento aria. Alta capacità termica per applicazioni intensive. Connessione EUR.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">WP-18</span><span class="tag">350A</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="torcia tig wp-26 200a aria newcowp-26"><div class="prod-code">NEWCOWP-26</div><div class="prod-name">Corpo Torcia TIG WP-26 (200A Aria)</div><div class="prod-desc">200A aria. Compatta ed ergonomica per precisione su inox e alluminio.</div><div class="prod-tags"><span class="tag">TIG</span><span class="tag">WP-26</span><span class="tag">200A</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="kit completamento wp-17 1.6mm newcokt.17.16"><div class="prod-code">NEWCOKT.17.16</div><div class="prod-name">Kit Completamento WP-17 Ø 1.6mm</div><div class="prod-desc">Kit per WP-17 Ø 1,6mm: pinze, portapinza, cappellotto lungo e corto, ugello ceramica. Tutto incluso.</div><div class="prod-tags"><span class="tag">KIT</span><span class="tag">WP-17</span><span class="tag">Ø1.6MM</span></div></div>
+    <div class="prod-card anim" data-cat="tig" data-kw="kit completamento wp-9 1.6mm newcokt.9.16"><div class="prod-code">NEWCOKT.9.16</div><div class="prod-name">Kit Completamento WP-9 Ø 1.6mm</div><div class="prod-desc">Kit per torcia WP-9/20/25 Ø 1,6mm. Accessori originali per configurazione completa e immediata.</div><div class="prod-tags"><span class="tag">KIT</span><span class="tag">WP-9/20/25</span><span class="tag">Ø1.6MM</span></div></div>
   </div>
 
-  <div class="stripe"></div>
+  <p class="no-results" id="no-results">Nessun prodotto trovato. Prova una ricerca diversa.</p>
+  <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+    <button class="btn-load" onclick="loadMore()">Mostra altri prodotti</button>
+  </div>
+</section>
 
-  <!-- CONTATTI -->
-  <section id="contatti">
-    <p class="sec-label">Contatti</p>
-    <h2 class="sec-title">Parlaci del tuo <span class="acc">progetto</span></h2>
-    <p class="sec-desc">Siamo disponibili Lun–Ven 08:00–18:00, Sabato su appuntamento.</p>
+<div class="stripe"></div>
 
-    <div class="contatti-wrap">
-      <div class="cont-info">
-        <div class="cont-row">
-          <span class="cr-icon">📍</span>
-          <div>
-            <h4>Sede Operativa</h4>
-            <p>Via Aurelia 430/432<br />San Lazzaro Vecchio, Sarzana (SP)</p>
-          </div>
-        </div>
-        <div class="cont-row">
-          <span class="cr-icon">📞</span>
-          <div>
-            <h4>Telefono</h4>
-            <a href="tel:+393934775160">+39 393 4775160</a>
-          </div>
-        </div>
-        <div class="cont-row">
-          <span class="cr-icon">✉️</span>
-          <div>
-            <h4>Email Commerciale</h4>
-            <a href="mailto:commerciale@tecnosaldo.it">commerciale@tecnosaldo.it</a>
-          </div>
-        </div>
-        <div class="cont-row">
-          <span class="cr-icon">🌐</span>
-          <div>
-            <h4>Sito Web</h4>
-            <a href="https://www.tecnosaldo.it" target="_blank">www.tecnosaldo.it</a>
-          </div>
-        </div>
-        <div class="cont-row">
-          <span class="cr-icon">🕐</span>
-          <div>
-            <h4>Orari</h4>
-            <p>Lun–Ven: 08:00–18:00<br />Sabato: su appuntamento</p>
-          </div>
-        </div>
-      </div>
+<!-- DOWNLOAD -->
+<div class="full-sec dl-bg" id="download">
+  <div class="inner">
+    <p class="sec-label">App Mobile</p>
+    <h2 class="sec-title anim">Scarica l'<span class="y">App</span></h2>
+    <p class="sec-desc anim">Accedi al catalogo completo, richiedi preventivi e contatta il supporto direttamente dal tuo smartphone. Disponibile su tutte le piattaforme.</p>
+    <div class="dl-cards">
+      <div class="dl-card anim"><div class="dl-icon"></div><div class="dl-h">iPhone / iPad</div><div class="dl-p">iOS 14 o superiore. Ottimizzata per tutti i dispositivi Apple.</div><a class="dl-btn" href="#" id="link-ios">App Store ↗</a></div>
+      <div class="dl-card anim"><div class="dl-icon">🤖</div><div class="dl-h">Android</div><div class="dl-p">Android 8.0+. Disponibile su Google Play Store.</div><a class="dl-btn" href="#" id="link-android">Play Store ↗</a></div>
+      <div class="dl-card anim"><div class="dl-icon">📦</div><div class="dl-h">APK Diretto</div><div class="dl-p">Installa il file APK manualmente su dispositivi Android.</div><a class="dl-btn" href="#" id="link-apk" download>Scarica APK ↓</a></div>
+      <div class="dl-card anim"><div class="dl-icon">🌐</div><div class="dl-h">Web App</div><div class="dl-p">Accedi dal browser, senza installazioni su nessun dispositivo.</div><a class="dl-btn" href="https://www.tecnosaldo.it" target="_blank">Apri nel browser ↗</a></div>
+    </div>
+  </div>
+</div>
 
-      <div class="contact-form-box">
-        <h3>Richiedi una consulenza</h3>
-        <div class="form-group">
-          <label>Nome e Cognome</label>
-          <input type="text" placeholder="Mario Rossi" />
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="mario@azienda.it" />
-        </div>
-        <div class="form-group">
-          <label>Telefono</label>
-          <input type="tel" placeholder="+39 ..." />
-        </div>
-        <div class="form-group">
-          <label>Interesse</label>
-          <select>
+<!-- SERVIZI -->
+<div class="full-sec" id="servizi" style="background:rgba(0,0,0,.25);">
+  <div class="inner">
+    <p class="sec-label">Servizi & Supporto</p>
+    <h2 class="sec-title anim">Siamo con te <span class="y">sempre</span></h2>
+    <p class="sec-desc anim">Prima, durante e dopo ogni fornitura. Il team Tecnosaldo è pronto per consulenze, interventi tecnici, formazione certificata e soluzioni di noleggio.</p>
+    <div class="serv-grid">
+      <div class="card anim"><div class="serv-icon">🔍</div><div class="serv-h">Consulenza Pre-Vendita</div><div class="serv-p">Analisi del processo e selezione del prodotto corretto per ogni applicazione. Un referente dedicato per ogni cliente.</div></div>
+      <div class="card anim"><div class="serv-icon">🎯</div><div class="serv-h">Demo in Loco</div><div class="serv-p">Dimostrazioni Miller Electric e ESAB direttamente nel tuo stabilimento o cantiere, senza impegno.</div></div>
+      <div class="card anim"><div class="serv-icon">🛠</div><div class="serv-h">Assistenza Tecnica</div><div class="serv-p">Supporto telefonico, da remoto e intervento tecnico in sede per tutti i brand trattati. Centro Assistenza Certificato Miller.</div></div>
+      <div class="card anim"><div class="serv-icon">🔩</div><div class="serv-h">Ricambi Originali</div><div class="serv-p">Disponibilità rapida di ricambi originali Miller Electric e accessori per tutti i brand. Manutenzione preventiva inclusa.</div></div>
+      <div class="card anim"><div class="serv-icon">🎓</div><div class="serv-h">Formazione Certificata</div><div class="serv-p">Corsi base e avanzati con rilascio di attestato di partecipazione ufficiale. Formazione su impianti Miller e ESAB.</div></div>
+      <div class="card anim"><div class="serv-icon">🚛</div><div class="serv-h">Noleggio Impianti</div><div class="serv-p">Soluzioni noleggio breve e lungo periodo per gestire i picchi produttivi senza immobilizzare capitale.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="stripe"></div>
+
+<!-- CONTATTI -->
+<section class="sec" id="contatti">
+  <p class="sec-label">Contattaci</p>
+  <h2 class="sec-title anim">Parlaci del tuo <span class="y">progetto</span></h2>
+  <p class="sec-desc anim">Il nostro team è disponibile Lun–Ven 08:00–18:00, Sabato su appuntamento. Risposta garantita entro 24h.</p>
+  <div class="cont-grid">
+    <div class="cont-rows">
+      <div class="cont-row anim"><span class="cr-icon">📍</span><div><div class="cr-label">Sede Operativa</div><div class="cr-val">Via Aurelia 430/432<br/>San Lazzaro Vecchio, Sarzana (SP)</div></div></div>
+      <div class="cont-row anim"><span class="cr-icon">📞</span><div><div class="cr-label">Telefono</div><div class="cr-val"><a href="tel:+393934775160">+39 393 4775160</a></div></div></div>
+      <div class="cont-row anim"><span class="cr-icon">💬</span><div><div class="cr-label">WhatsApp</div><div class="cr-val"><a href="https://wa.me/393934775160" target="_blank">Scrivici su WhatsApp</a></div></div></div>
+      <div class="cont-row anim"><span class="cr-icon">✉️</span><div><div class="cr-label">Email Commerciale</div><div class="cr-val"><a href="mailto:commerciale@tecnosaldo.it">commerciale@tecnosaldo.it</a></div></div></div>
+      <div class="cont-row anim"><span class="cr-icon">🌐</span><div><div class="cr-label">Sito Web</div><div class="cr-val"><a href="https://www.tecnosaldo.it" target="_blank">www.tecnosaldo.it</a></div></div></div>
+      <div class="cont-row anim"><span class="cr-icon">🕐</span><div><div class="cr-label">Orari</div><div class="cr-val">Lun–Ven: 08:00–18:00<br/>Sabato: su appuntamento</div></div></div>
+      <a href="https://maps.google.com?q=Via+Aurelia+430+Sarzana+SP" target="_blank" class="cont-row anim" style="text-decoration:none; cursor:pointer;">
+        <span class="cr-icon">🗺</span><div><div class="cr-label">Come raggiungerci</div><div class="cr-val" style="color:var(--y)">Apri in Google Maps ↗</div></div>
+      </a>
+    </div>
+    <div class="form-box anim">
+      <h3>Richiedi una consulenza gratuita</h3>
+      <div id="form-success" class="form-success">✅ Richiesta inviata! Ti contatteremo entro 24h.</div>
+      <form id="contact-form" onsubmit="submitForm(event)" novalidate>
+        <div class="fg" id="fg-nome"><label>Nome e Cognome *</label><input type="text" name="nome" placeholder="Mario Rossi"/><span class="err">Campo obbligatorio</span></div>
+        <div class="fg" id="fg-email"><label>Email *</label><input type="email" name="email" placeholder="mario@azienda.it"/><span class="err">Email non valida</span></div>
+        <div class="fg"><label>Telefono</label><input type="tel" name="tel" placeholder="+39 393 ..."/></div>
+        <div class="fg"><label>Azienda</label><input type="text" name="azienda" placeholder="Nome azienda (opzionale)"/></div>
+        <div class="fg"><label>Interesse</label>
+          <select name="interesse">
             <option value="">Seleziona categoria...</option>
-            <option>Impianti Miller Electric</option>
-            <option>Impianti ESAB</option>
-            <option>Consumabili</option>
-            <option>DPI & Abbigliamento</option>
-            <option>Accessori TIG</option>
+            <option>Impianti Miller Electric (MIG/TIG/MMA)</option>
+            <option>Impianti ESAB (Rebel/Rogue/K4000)</option>
+            <option>Consumabili Ferro (elettrodi, fili, bacchette)</option>
+            <option>Consumabili Inox 308L/316L</option>
+            <option>Consumabili Generici (gas, torce, cavi)</option>
             <option>Dischi Abrasivi</option>
-            <option>Formazione / Demo</option>
-            <option>Noleggio</option>
+            <option>DPI (guanti, abbigliamento ignifugo)</option>
+            <option>Accessori TIG (tungsteno, torce WP)</option>
+            <option>Ricambi Maschere & Caschi</option>
+            <option>Formazione / Demo in loco</option>
+            <option>Noleggio Impianti</option>
             <option>Assistenza Tecnica</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Messaggio</label>
-          <textarea placeholder="Descrivi la tua esigenza..."></textarea>
-        </div>
-        <button class="btn-submit" onclick="sendForm()">Invia Richiesta ⚡</button>
-      </div>
+        <div class="fg" id="fg-msg"><label>Messaggio *</label><textarea name="msg" placeholder="Descrivi la tua esigenza, il tipo di saldatura e il materiale..."></textarea><span class="err">Inserisci un messaggio</span></div>
+        <button class="btn-submit" type="submit">Invia Richiesta ⚡</button>
+      </form>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="f-logo"><img src="logo.jpg" alt="Tecnosaldo" /></div>
-    <p>© 2025 Tecnosaldo · Via Aurelia 430/432, Sarzana (SP) · Distributore Ufficiale Miller Electric Toscana</p>
-    <div class="footer-links">
-      <a href="https://www.tecnosaldo.it" target="_blank">Web</a>
-      <a href="mailto:commerciale@tecnosaldo.it">Email</a>
-      <a href="tel:+393934775160">Tel</a>
-    </div>
-  </footer>
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo"><img src="data:image/jpeg;base64,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" alt="Tecnosaldo"/></div>
+  <div class="f-txt">
+    <div>© 2025 <strong>Tecnosaldo</strong> — Distributore Ufficiale Miller Electric · Toscana</div>
+    <div>Via Aurelia 430/432, San Lazzaro Vecchio, Sarzana (SP) · Tutti i diritti riservati</div>
+  </div>
+  <div class="f-links">
+    <a href="https://www.tecnosaldo.it" target="_blank">Website</a>
+    <a href="mailto:commerciale@tecnosaldo.it">Email</a>
+    <a href="tel:+393934775160">Telefono</a>
+    <a href="https://wa.me/393934775160" target="_blank">WhatsApp</a>
+  </div>
+</footer>
 
-</div>
+</div><!-- .wrap -->
 
-<!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
-/* ── Sfondo 3D Three.js con palette Tecnosaldo ── */
-(function () {
-  const canvas = document.getElementById('bg-canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+/* ══════════════════════════════════════════
+   THREE.JS — Sfondo 3D 4K-ready
+   Scintille di saldatura + griglia industriale
+══════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('bg');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3)); // 4K support
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0, 30);
+  const cam = new THREE.PerspectiveCamera(58, window.innerWidth/window.innerHeight, 0.1, 1000);
+  cam.position.set(0,0,32);
 
-  /* Particelle giallo-arancio (colore brand) */
-  const N = 320;
-  const pos = new Float32Array(N * 3);
-  const colors = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) {
-    pos[i*3]   = (Math.random()-0.5)*130;
-    pos[i*3+1] = (Math.random()-0.5)*130;
-    pos[i*3+2] = (Math.random()-0.5)*80;
-    const mix = Math.random();
-    colors[i*3]   = 1.0;
-    colors[i*3+1] = 0.6 + mix * 0.2;
-    colors[i*3+2] = 0.0 + mix * 0.05;
+  /* ── Particelle scintilla (giallo/arancio brand) ── */
+  const N = 500;
+  const pos = new Float32Array(N*3);
+  const col = new Float32Array(N*3);
+  const vel = new Float32Array(N*3); // velocità per movimento
+  for(let i=0;i<N;i++){
+    pos[i*3]   = (Math.random()-.5)*140;
+    pos[i*3+1] = (Math.random()-.5)*140;
+    pos[i*3+2] = (Math.random()-.5)*90;
+    const r = Math.random();
+    col[i*3]   = 1.0;
+    col[i*3+1] = 0.4 + r*0.45;
+    col[i*3+2] = r < 0.3 ? 0.05 : 0;
+    vel[i*3]   = (Math.random()-.5)*.02;
+    vel[i*3+1] = (Math.random()-.5)*.02;
+    vel[i*3+2] = 0;
   }
   const pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  const pMat = new THREE.PointsMaterial({ size: 0.22, vertexColors: true, transparent: true, opacity: 0.55, sizeAttenuation: true });
-  scene.add(new THREE.Points(pGeo, pMat));
+  const pPos = new THREE.BufferAttribute(pos,3); pPos.setUsage(THREE.DynamicDrawUsage);
+  pGeo.setAttribute('position',pPos);
+  pGeo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const pMat = new THREE.PointsMaterial({size:.2,vertexColors:true,transparent:true,opacity:.6,sizeAttenuation:true});
+  const pts = new THREE.Points(pGeo,pMat);
+  scene.add(pts);
 
-  /* Griglia scura */
-  const grid = new THREE.GridHelper(200, 36, 0x1a1200, 0x110d00);
-  grid.position.y = -18;
+  /* ── Griglia industriale ── */
+  const grid = new THREE.GridHelper(240,48,0x1a1000,0x0e0800);
+  grid.position.y = -20;
   scene.add(grid);
 
-  /* Toro knot (ingranaggio industriale) */
+  /* ── Toro knot (bobina filo) ── */
   const torus = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(4.5, 1.1, 100, 14),
-    new THREE.MeshPhongMaterial({ color: 0x1a1000, emissive: 0x0a0800, wireframe: false, transparent: true, opacity: 0.3 })
+    new THREE.TorusKnotGeometry(4.8,1.2,120,16),
+    new THREE.MeshPhongMaterial({color:0x1a0e00,emissive:0x0a0700,wireframe:false,transparent:true,opacity:.28})
   );
-  torus.position.set(16, 3, -10);
+  torus.position.set(18,4,-12);
   scene.add(torus);
 
-  /* Icosaedro wireframe */
+  /* ── Icosaedro (maschera saldatura) ── */
   const ico = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(5, 1),
-    new THREE.MeshPhongMaterial({ color: 0x2a1800, emissive: 0x1a0e00, wireframe: true, transparent: true, opacity: 0.4 })
+    new THREE.IcosahedronGeometry(5.5,1),
+    new THREE.MeshPhongMaterial({color:0x201200,emissive:0x140c00,wireframe:true,transparent:true,opacity:.38})
   );
-  ico.position.set(-20, 5, -6);
+  ico.position.set(-22,6,-8);
   scene.add(ico);
 
-  /* Luci brand: giallo + bianco */
-  scene.add(new THREE.AmbientLight(0x100d00, 2));
-  const pl1 = new THREE.PointLight(0xFFB800, 2.5, 80);
-  pl1.position.set(8, 18, 10);
+  /* ── Ottaedro ── */
+  const oct = new THREE.Mesh(
+    new THREE.OctahedronGeometry(3.5,0),
+    new THREE.MeshPhongMaterial({color:0x1a1200,emissive:0x0e0900,wireframe:true,transparent:true,opacity:.3})
+  );
+  oct.position.set(4,-12,-14);
+  scene.add(oct);
+
+  /* ── Luci brand ── */
+  scene.add(new THREE.AmbientLight(0x100a00,2.5));
+  const pl1 = new THREE.PointLight(0xFFB800,3,90);
+  pl1.position.set(10,20,12);
   scene.add(pl1);
-  const pl2 = new THREE.PointLight(0xffffff, 1.2, 60);
-  pl2.position.set(-14, -8, 5);
+  const pl2 = new THREE.PointLight(0xff6600,1.6,65);
+  pl2.position.set(-18,-10,6);
   scene.add(pl2);
+  const pl3 = new THREE.PointLight(0xffffff,.8,50);
+  pl3.position.set(0,30,0);
+  scene.add(pl3);
 
-  let mx = 0, my = 0;
-  document.addEventListener('mousemove', e => {
-    mx = (e.clientX / window.innerWidth - 0.5) * 2;
-    my = (e.clientY / window.innerHeight - 0.5) * 2;
+  /* ── Parallax mouse ── */
+  let mx=0,my=0,scrollY=0;
+  document.addEventListener('mousemove',e=>{
+    mx=(e.clientX/window.innerWidth-.5)*2;
+    my=(e.clientY/window.innerHeight-.5)*2;
+  });
+  window.addEventListener('scroll',()=>{ scrollY=window.scrollY; });
+
+  window.addEventListener('resize',()=>{
+    cam.aspect=window.innerWidth/window.innerHeight;
+    cam.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
   });
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  let t = 0;
-  (function animate() {
+  let t=0;
+  (function animate(){
     requestAnimationFrame(animate);
-    t += 0.007;
-    torus.rotation.x = t * 0.35;
-    torus.rotation.y = t * 0.55;
-    ico.rotation.y = -t * 0.45;
-    ico.rotation.z = t * 0.28;
-    grid.position.z = (t * 1.8) % 5 - 2.5;
-    camera.position.x += (mx * 3.5 - camera.position.x) * 0.04;
-    camera.position.y += (-my * 2 - camera.position.y) * 0.04;
-    camera.lookAt(scene.position);
-    renderer.render(scene, camera);
+    t+=.006;
+
+    /* Movimento particelle */
+    for(let i=0;i<N;i++){
+      pos[i*3]   += vel[i*3];
+      pos[i*3+1] += vel[i*3+1];
+      if(Math.abs(pos[i*3])>70)   vel[i*3]   *= -1;
+      if(Math.abs(pos[i*3+1])>70) vel[i*3+1] *= -1;
+    }
+    pPos.needsUpdate=true;
+
+    torus.rotation.x=t*.38;
+    torus.rotation.y=t*.52;
+    ico.rotation.y=-t*.42;
+    ico.rotation.z=t*.26;
+    oct.rotation.x=t*.3;
+    oct.rotation.y=-t*.4;
+
+    grid.position.z=(t*1.6)%5-2.5;
+
+    /* Parallax + scroll */
+    cam.position.x+=(mx*4-cam.position.x)*.04;
+    cam.position.y+=(-my*2-scrollY*.005-cam.position.y)*.04;
+    cam.lookAt(scene.position);
+
+    renderer.render(scene,cam);
   })();
 })();
 
-/* ── Tab prodotti ── */
-function filterProd(cat) {
-  document.querySelectorAll('.prod-card').forEach(c => {
-    c.style.display = c.dataset.cat === cat ? '' : 'none';
-  });
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent.toLowerCase().replace(/ /g,'').includes(cat) || b.onclick.toString().includes(cat));
-  });
+/* ══════════════════════════════════════════
+   NAVIGATION — Active link + hamburger
+══════════════════════════════════════════ */
+function toggleMenu(){
+  document.getElementById('ham').classList.toggle('open');
+  document.getElementById('mnav').classList.toggle('open');
 }
+function closeMenu(){
+  document.getElementById('ham').classList.remove('open');
+  document.getElementById('mnav').classList.remove('open');
+}
+const sections=document.querySelectorAll('section[id], div[id]');
+const navLinks=document.querySelectorAll('nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-160) cur=s.id; });
+  navLinks.forEach(a=>{ a.classList.toggle('active',a.getAttribute('href')=='#'+cur); });
+});
 
-/* ── Form submit ── */
-function sendForm() {
-  const btn = document.querySelector('.btn-submit');
-  btn.textContent = '✅ Richiesta inviata!';
-  btn.style.background = '#2a7a2a';
-  setTimeout(() => {
-    btn.textContent = 'Invia Richiesta ⚡';
-    btn.style.background = '';
-  }, 3000);
+/* ══════════════════════════════════════════
+   SCROLL ANIMATIONS — IntersectionObserver
+══════════════════════════════════════════ */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.anim').forEach(el=>io.observe(el));
+
+/* ══════════════════════════════════════════
+   STATS COUNTER ANIMATION
+══════════════════════════════════════════ */
+const statNums=document.querySelectorAll('.stat-num[data-target]');
+const statObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target, target=+el.dataset.target, suf=el.dataset.suffix||'';
+      let cur=0;
+      const step=Math.ceil(target/60);
+      const timer=setInterval(()=>{
+        cur=Math.min(cur+step,target);
+        el.textContent=cur+suf;
+        if(cur>=target) clearInterval(timer);
+      },18);
+      statObs.unobserve(el);
+    }
+  });
+},{threshold:.5});
+statNums.forEach(el=>statObs.observe(el));
+
+/* ══════════════════════════════════════════
+   PRODOTTI — Search + Filter + LoadMore
+══════════════════════════════════════════ */
+let currentCat='all';
+const CARDS_PER_PAGE=12;
+let visibleCount=CARDS_PER_PAGE;
+
+function getAllCards(){
+  return Array.from(document.querySelectorAll('.prod-card'));
+}
+function filterProds(){
+  const q=document.getElementById('prod-search').value.toLowerCase().trim();
+  visibleCount=CARDS_PER_PAGE;
+  renderProds(q);
+}
+function setTab(btn, cat){
+  currentCat=cat;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('prod-search').value='';
+  visibleCount=CARDS_PER_PAGE;
+  renderProds('');
+}
+function renderProds(q){
+  const cards=getAllCards();
+  let shown=0;
+  cards.forEach(c=>{
+    const catOk=(currentCat==='all')||(c.dataset.cat===currentCat);
+    const kwOk=!q||(c.dataset.kw+' '+c.querySelector('.prod-name').textContent+' '+c.querySelector('.prod-desc').textContent).toLowerCase().includes(q);
+    const match=catOk&&kwOk;
+    if(match&&shown<visibleCount){ c.style.display=''; shown++; }
+    else{ c.style.display='none'; }
+  });
+  const total=cards.filter(c=>{
+    const catOk=(currentCat==='all')||(c.dataset.cat===currentCat);
+    const kwOk=!q||(c.dataset.kw+' '+c.querySelector('.prod-name').textContent+' '+c.querySelector('.prod-desc').textContent).toLowerCase().includes(q);
+    return catOk&&kwOk;
+  }).length;
+  document.getElementById('no-results').style.display=total===0?'block':'none';
+  document.getElementById('load-more-wrap').style.display=(total>visibleCount)?'block':'none';
+}
+function loadMore(){
+  visibleCount+=CARDS_PER_PAGE;
+  renderProds(document.getElementById('prod-search').value.toLowerCase().trim());
+}
+renderProds('');
+
+/* ══════════════════════════════════════════
+   FORM — Validation + Submit
+══════════════════════════════════════════ */
+function submitForm(e){
+  e.preventDefault();
+  let ok=true;
+  const nome=document.querySelector('[name=nome]');
+  const email=document.querySelector('[name=email]');
+  const msg=document.querySelector('[name=msg]');
+  const fgNome=document.getElementById('fg-nome');
+  const fgEmail=document.getElementById('fg-email');
+  const fgMsg=document.getElementById('fg-msg');
+  fgNome.classList.remove('invalid');
+  fgEmail.classList.remove('invalid');
+  fgMsg.classList.remove('invalid');
+  if(!nome.value.trim()){ fgNome.classList.add('invalid'); ok=false; }
+  if(!email.value.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)){ fgEmail.classList.add('invalid'); ok=false; }
+  if(!msg.value.trim()){ fgMsg.classList.add('invalid'); ok=false; }
+  if(!ok) return;
+  document.getElementById('contact-form').style.display='none';
+  document.getElementById('form-success').style.display='block';
 }
 </script>
 
